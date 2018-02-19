@@ -17,8 +17,8 @@ public class ApplicationModule {
 
     private final Application application;
 
-    public ApplicationModule(Application app) {
-        application = app;
+    public ApplicationModule(Application application) {
+        this.application = application;
     }
 
     @Provides
