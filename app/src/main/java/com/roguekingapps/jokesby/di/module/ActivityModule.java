@@ -10,7 +10,7 @@ import dagger.Provides;
 public class ActivityModule {
 
     @Provides
-    MainPresenter providesMainPresenter(MainPresenterImpl mainPresenter) {
+    MainPresenter provideMainPresenter(MainPresenterImpl mainPresenter) {
         return mainPresenter;
     }
 }
