@@ -1,11 +1,10 @@
 package com.roguekingapps.jokesby.ui.main;
 
-import android.util.Log;
-
 import com.roguekingapps.jokesby.data.network.ApiHelper;
 import com.roguekingapps.jokesby.di.PerActivity;
 
 import javax.inject.Inject;
+
 /**
  * Communicates with the View and Model to load and display jokes.
  */
@@ -13,10 +12,12 @@ import javax.inject.Inject;
 public class MainPresenterImpl implements MainPresenter {
 
     private ApiHelper apiHelper;
+    private MainView mainView;
 
     @Inject
-    MainPresenterImpl(ApiHelper apiHelper) {
+    MainPresenterImpl(ApiHelper apiHelper, MainView mainView) {
         this.apiHelper = apiHelper;
+        this.mainView = mainView;
     }
 
     @Override
@@ -26,6 +27,6 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void showJokes() {
-        Log.i(MainPresenterImpl.class.getSimpleName(), "show jokes!");
+        mainView.showJokes();
     }
 }
