@@ -1,10 +1,10 @@
-package com.roguekingapps.jokesby.data.network;
+package com.roguekingapps.jokesby.data.network.model;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-class JokeContainer {
+public class JokeContainer {
 
     @SerializedName("data")
     private List<Joke> jokes;
