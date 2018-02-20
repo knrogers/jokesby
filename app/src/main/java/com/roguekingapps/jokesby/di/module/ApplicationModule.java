@@ -6,7 +6,8 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.roguekingapps.jokesby.R;
-import com.roguekingapps.jokesby.data.network.ApiResponse;
+import com.roguekingapps.jokesby.data.network.ApiHelper;
+import com.roguekingapps.jokesby.data.network.ApiHelperImpl;
 import com.roguekingapps.jokesby.data.network.JokeApi;
 import com.roguekingapps.jokesby.di.ApplicationContext;
 
@@ -42,34 +43,34 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    ApiResponse provideApiResponse() {
-        return new ApiResponse();
+    ApiHelper provideApiHelper(ApiHelperImpl apiHelper) {
+        return apiHelper;
     }
 
     @Provides
     @Singleton
     JokeApi provideJokeApi() {
-        return provideRetrofit().create(JokeApi.class);
+        return getRetrofit().create(JokeApi.class);
     }
 
     @Singleton
-    private Retrofit provideRetrofit() {
+    private Retrofit getRetrofit() {
         return new Retrofit.Builder()
                 .baseUrl(application.getString(R.string.base_api_url))
-                .addConverterFactory(GsonConverterFactory.create(provideGson()))
-                .client(provideOkHttpClient())
+                .addConverterFactory(GsonConverterFactory.create(getGson()))
+                .client(getOkHttpClient())
                 .build();
     }
 
     @Singleton
-    private Gson provideGson() {
+    private Gson getGson() {
         return new GsonBuilder()
                 .setLenient()
                 .create();
     }
 
     @Singleton
-    private OkHttpClient provideOkHttpClient() {
+    private OkHttpClient getOkHttpClient() {
         return new OkHttpClient.Builder()
                 .readTimeout(60, TimeUnit.SECONDS)
                 .connectTimeout(60, TimeUnit.SECONDS)
