@@ -3,6 +3,8 @@ package com.roguekingapps.jokesby.di.module;
 import android.app.Application;
 import android.content.Context;
 
+import com.roguekingapps.jokesby.data.DataManager;
+import com.roguekingapps.jokesby.data.DataManagerImpl;
 import com.roguekingapps.jokesby.data.network.ApiHelper;
 import com.roguekingapps.jokesby.data.network.ApiHelperImpl;
 import com.roguekingapps.jokesby.di.ApplicationContext;
@@ -30,6 +32,12 @@ public class ApplicationModule {
     @Provides
     Application provideApplication() {
         return application;
+    }
+
+    @Provides
+    @Singleton
+    DataManager provideDataManager(DataManagerImpl dataManager) {
+        return dataManager;
     }
 
     @Provides
