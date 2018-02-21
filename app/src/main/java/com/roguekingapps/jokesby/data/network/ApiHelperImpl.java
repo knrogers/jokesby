@@ -1,16 +1,14 @@
 package com.roguekingapps.jokesby.data.network;
 
-import android.support.annotation.NonNull;
-
 import com.roguekingapps.jokesby.data.network.model.JokeContainer;
-import com.roguekingapps.jokesby.ui.main.MainPresenter;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Accesses the API and loads jokes.
@@ -26,22 +24,10 @@ public class ApiHelperImpl implements ApiHelper {
     }
 
     @Override
-    public void loadJokes(final MainPresenter presenter) {
-        Call<JokeContainer> call = jokeApi.loadJokes("11d", "12d");
-        call.enqueue(new Callback<JokeContainer>() {
-            @Override
-            public void onResponse(@NonNull Call<JokeContainer> call, @NonNull Response<JokeContainer> response) {
-                if(response.isSuccessful()) {
-                    presenter.showJokes();
-                } else {
-                    System.out.println(response.errorBody());
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<JokeContainer> call, @NonNull Throwable t) {
-
-            }
-        });
+    public void loadJokes(Consumer<JokeContainer> jokeConsumer) {
+        Observable<JokeContainer> observable = jokeApi.loadJokes("11d", "12d");
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(jokeConsumer);
     }
 }
