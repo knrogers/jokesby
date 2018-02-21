@@ -1,7 +1,10 @@
 package com.roguekingapps.jokesby.ui.main;
 
-import com.roguekingapps.jokesby.data.network.ApiHelper;
+import com.roguekingapps.jokesby.data.DataManager;
+import com.roguekingapps.jokesby.data.network.model.Joke;
 import com.roguekingapps.jokesby.di.PerActivity;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -11,22 +14,22 @@ import javax.inject.Inject;
 @PerActivity
 public class MainPresenterImpl implements MainPresenter {
 
-    private ApiHelper apiHelper;
+    private DataManager dataManager;
     private MainView mainView;
 
     @Inject
-    MainPresenterImpl(ApiHelper apiHelper, MainView mainView) {
-        this.apiHelper = apiHelper;
+    MainPresenterImpl(DataManager dataManager, MainView mainView) {
+        this.dataManager = dataManager;
         this.mainView = mainView;
     }
 
     @Override
     public void loadJokes() {
-        apiHelper.loadJokes(this);
+        dataManager.loadJokes(this);
     }
 
     @Override
-    public void showJokes() {
-        mainView.showJokes();
+    public void showJokes(List<Joke> jokes) {
+        mainView.showJokes(jokes);
     }
 }
