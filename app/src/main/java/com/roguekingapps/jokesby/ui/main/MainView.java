@@ -1,6 +1,10 @@
 package com.roguekingapps.jokesby.ui.main;
 
+import com.roguekingapps.jokesby.data.network.model.Joke;
+
+import java.util.List;
+
 public interface MainView {
 
-    void showJokes();
+    void showJokes(List<Joke> joke);
 }
