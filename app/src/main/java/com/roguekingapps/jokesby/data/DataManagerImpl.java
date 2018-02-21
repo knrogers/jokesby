@@ -8,12 +8,14 @@ import com.roguekingapps.jokesby.ui.main.MainPresenter;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import io.reactivex.functions.Consumer;
 
 /**
  * Communicates between the data helper classes, i.e {@link ApiHelper}, and the presenters.
  */
+@Singleton
 public class DataManagerImpl implements DataManager {
 
     private ApiHelper apiHelper;
