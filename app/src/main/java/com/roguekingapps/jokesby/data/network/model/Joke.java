@@ -1,8 +1,11 @@
 package com.roguekingapps.jokesby.data.network.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-public class Joke {
+public class Joke implements Parcelable {
 
     private String id;
     private String title;
@@ -14,6 +17,26 @@ public class Joke {
     private String user;
 
     private String url;
+
+    protected Joke(Parcel in) {
+        id = in.readString();
+        title = in.readString();
+        body = in.readString();
+        user = in.readString();
+        url = in.readString();
+    }
+
+    public static final Creator<Joke> CREATOR = new Creator<Joke>() {
+        @Override
+        public Joke createFromParcel(Parcel in) {
+            return new Joke(in);
+        }
+
+        @Override
+        public Joke[] newArray(int size) {
+            return new Joke[size];
+        }
+    };
 
     public String getId() {
         return id;
@@ -53,5 +76,19 @@ public class Joke {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
+        parcel.writeString(title);
+        parcel.writeString(body);
+        parcel.writeString(user);
+        parcel.writeString(url);
     }
 }
