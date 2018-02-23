@@ -25,7 +25,7 @@ public class ActivityModule {
 
     @Provides
     ListAdapter provideListAdapter() {
-        return new ListAdapter(activity);
+        return new ListAdapter(activity, activity);
     }
 
     @Provides

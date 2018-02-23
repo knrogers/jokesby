@@ -25,8 +25,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     private List<Joke> jokes;
     private JokeOnClickHandler clickHandler;
 
-    public ListAdapter(Context context) {
+    public ListAdapter(Context context, JokeOnClickHandler clickHandler) {
         this.context = context;
+        this.clickHandler = clickHandler;
     }
 
     @Override
@@ -75,7 +76,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
         @Override
         public void onClick(View view) {
-
+            clickHandler.onClick(jokes.get(getAdapterPosition()));
         }
     }
 

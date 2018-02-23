@@ -1,5 +1,6 @@
 package com.roguekingapps.jokesby.ui.main;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -14,12 +15,13 @@ import com.roguekingapps.jokesby.di.component.ActivityComponent;
 import com.roguekingapps.jokesby.di.component.DaggerActivityComponent;
 import com.roguekingapps.jokesby.di.module.ActivityModule;
 import com.roguekingapps.jokesby.ui.adapter.ListAdapter;
+import com.roguekingapps.jokesby.ui.detail.DetailActivity;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity implements MainView {
+public class MainActivity extends AppCompatActivity implements MainView, ListAdapter.JokeOnClickHandler {
 
     private ActivityComponent activityComponent;
 
@@ -66,5 +68,11 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     public void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onClick(Joke joke) {
+        Intent intent = new Intent(this, DetailActivity.class);
+        startActivity(intent);
     }
 }
