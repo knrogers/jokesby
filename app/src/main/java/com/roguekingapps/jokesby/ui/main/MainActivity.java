@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements MainView, ListAda
     @Override
     public void onClick(Joke joke) {
         Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra(getString(R.string.joke), joke);
         startActivity(intent);
     }
 }
