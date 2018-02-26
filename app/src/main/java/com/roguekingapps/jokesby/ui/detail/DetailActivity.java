@@ -16,6 +16,11 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ActivityDetailBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
 
+        setSupportActionBar(binding.detailToolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         Intent intent = getIntent();
         Joke joke = null;
         if (intent != null && intent.hasExtra(getString(R.string.joke))) {
@@ -23,7 +28,7 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         if (joke != null) {
-            binding.textViewJokeTitle.setText(joke.getTitle());
+            binding.detailTextViewTitle.setText(joke.getTitle());
         }
     }
 }
