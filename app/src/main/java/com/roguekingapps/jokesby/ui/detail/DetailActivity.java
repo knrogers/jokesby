@@ -4,19 +4,32 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.roguekingapps.jokesby.JokesbyApplication;
 import com.roguekingapps.jokesby.R;
 import com.roguekingapps.jokesby.data.network.model.Joke;
 import com.roguekingapps.jokesby.databinding.ActivityDetailBinding;
+import com.roguekingapps.jokesby.di.component.DaggerDetailActivityComponent;
+import com.roguekingapps.jokesby.di.component.DetailActivityComponent;
+import com.roguekingapps.jokesby.di.module.DetailActivityModule;
 
-public class DetailActivity extends AppCompatActivity {
+import javax.inject.Inject;
+
+public class DetailActivity extends AppCompatActivity implements DetailView {
+
+    private DetailActivityComponent activityComponent;
+
+    @Inject
+    DetailPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityDetailBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
+        getActivityComponent().inject(this);
 
         setSupportActionBar(binding.detailToolbar);
         if (getSupportActionBar() != null) {
@@ -32,6 +45,16 @@ public class DetailActivity extends AppCompatActivity {
         if (joke != null) {
             binding.detailTextViewTitle.setText(joke.getTitle());
         }
+    }
+
+    public DetailActivityComponent getActivityComponent() {
+        if (activityComponent == null) {
+            activityComponent = DaggerDetailActivityComponent.builder()
+                    .detailActivityModule(new DetailActivityModule(this))
+                    .applicationComponent(JokesbyApplication.get(this).getComponent())
+                    .build();
+        }
+        return activityComponent;
     }
 
     @Override
@@ -52,5 +75,10 @@ public class DetailActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void updateFavouriteIcon(boolean favourite) {
+        Log.i(DetailActivity.class.getSimpleName(), "update favourite icon");
     }
 }
