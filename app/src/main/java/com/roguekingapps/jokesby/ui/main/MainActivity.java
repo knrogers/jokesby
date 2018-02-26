@@ -11,9 +11,9 @@ import com.roguekingapps.jokesby.JokesbyApplication;
 import com.roguekingapps.jokesby.R;
 import com.roguekingapps.jokesby.data.network.model.Joke;
 import com.roguekingapps.jokesby.databinding.ActivityMainBinding;
-import com.roguekingapps.jokesby.di.component.ActivityComponent;
-import com.roguekingapps.jokesby.di.component.DaggerActivityComponent;
-import com.roguekingapps.jokesby.di.module.ActivityModule;
+import com.roguekingapps.jokesby.di.component.MainActivityComponent;
+import com.roguekingapps.jokesby.di.component.DaggerMainActivityComponent;
+import com.roguekingapps.jokesby.di.module.MainActivityModule;
 import com.roguekingapps.jokesby.ui.adapter.ListAdapter;
 import com.roguekingapps.jokesby.ui.detail.DetailActivity;
 
@@ -23,7 +23,7 @@ import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity implements MainView, ListAdapter.JokeOnClickHandler {
 
-    private ActivityComponent activityComponent;
+    private MainActivityComponent activityComponent;
 
     @Inject
     ListAdapter adapter;
@@ -46,10 +46,10 @@ public class MainActivity extends AppCompatActivity implements MainView, ListAda
         presenter.loadJokes();
     }
 
-    public ActivityComponent getActivityComponent() {
+    public MainActivityComponent getActivityComponent() {
         if (activityComponent == null) {
-            activityComponent = DaggerActivityComponent.builder()
-                    .activityModule(new ActivityModule(this))
+            activityComponent = DaggerMainActivityComponent.builder()
+                    .mainActivityModule(new MainActivityModule(this))
                     .applicationComponent(JokesbyApplication.get(this).getComponent())
                     .build();
         }
