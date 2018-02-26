@@ -5,6 +5,9 @@ import android.content.Context;
 
 import com.roguekingapps.jokesby.data.DataManager;
 import com.roguekingapps.jokesby.data.DataManagerImpl;
+import com.roguekingapps.jokesby.data.database.DatabaseHelper;
+import com.roguekingapps.jokesby.data.database.DatabaseHelperImpl;
+import com.roguekingapps.jokesby.data.database.DatabaseOpenHelper;
 import com.roguekingapps.jokesby.data.network.ApiHelper;
 import com.roguekingapps.jokesby.data.network.ApiHelperImpl;
 import com.roguekingapps.jokesby.di.ApplicationContext;
@@ -44,5 +47,17 @@ public class ApplicationModule {
     @Singleton
     ApiHelper provideApiHelper(ApiHelperImpl apiHelper) {
         return apiHelper;
+    }
+
+    @Provides
+    @Singleton
+    DatabaseHelper provideDatabaseHelper(DatabaseHelperImpl databaseHelper) {
+        return databaseHelper;
+    }
+
+    @Provides
+    @Singleton
+    DatabaseOpenHelper provideDataBaseOpenHelper() {
+        return new DatabaseOpenHelper(application);
     }
 }
