@@ -35,7 +35,7 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
         ActivityDetailBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
         getActivityComponent().inject(this);
 
-        setSupportActionBar(binding.detailToolbar);
+        setSupportActionBar(binding.layoutAppBar.toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
