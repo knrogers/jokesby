@@ -53,9 +53,24 @@ public class JokeContentProvider extends ContentProvider {
             throw new NullPointerException(INVALID_CONTEXT_VALUE);
         }
 
-        Cursor cursor = null;
+        int match = uriMatcher.match(uri);
+        Cursor cursor;
+        if (match == favourites) {
+            cursor = databaseOpenHelper.getReadableDatabase().query(
+                    JokeEntry.TABLE_NAME,
+                    projection,
+                    selection,
+                    selectionArgs,
+                    null,
+                    null,
+                    sortOrder);
+        } else {
+            throw new UnsupportedOperationException(context.getString(R.string.unknown_uri) + uri);
+        }
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.setNotificationUri(context.getContentResolver(), uri);
+        }
         return cursor;
-
     }
 
     @Nullable

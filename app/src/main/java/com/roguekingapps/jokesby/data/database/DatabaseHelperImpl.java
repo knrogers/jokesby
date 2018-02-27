@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
+import com.roguekingapps.jokesby.R;
 import com.roguekingapps.jokesby.data.database.JokeContract.JokeEntry;
 import com.roguekingapps.jokesby.data.network.model.Joke;
 import com.roguekingapps.jokesby.di.ApplicationContext;
@@ -21,7 +22,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * Deletes a {@link Joke} from the favourites database.
+ * Accesses the favourites database to process CRUD operations.
  */
 @Singleton
 public class DatabaseHelperImpl implements DatabaseHelper {
@@ -40,7 +41,7 @@ public class DatabaseHelperImpl implements DatabaseHelper {
             public void subscribe(ObservableEmitter<Cursor> emitter) throws Exception {
                 Cursor cursor = context.getContentResolver().query(
                         JokeEntry.CONTENT_URI, null,
-                        JokeEntry.COLUMN_API_ID,
+                        JokeEntry.COLUMN_API_ID + context.getString(R.string.parameter_placeholder),
                         new String[]{apiId}, null);
                 if (cursor == null) {
                     emitter.onError(new Exception("Cursor returned from query was null."));
