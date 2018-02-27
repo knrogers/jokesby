@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">Jokesby</string>
+    <string name="app_name" translatable="false">Jokesby</string>
+    <string name="authority" translatable="false">com.roguekingapps.jokesby</string>
+    <string name="joke" translatable="false">joke</string>
+    <string name="favourite" translatable="false">favourite</string>
     <string name="jokes_not_loaded">Jokes could not be loaded.</string>
-    <string name="joke">joke</string>
-    <string name="favourite">favourite</string>
+    <string name="error_add_favourite">Could not add favourite. Please try again.</string>
 </resources>

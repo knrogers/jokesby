@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.roguekingapps.jokesby.JokesbyApplication;
 import com.roguekingapps.jokesby.R;
@@ -21,6 +22,7 @@ import javax.inject.Inject;
 public class DetailActivity extends AppCompatActivity implements DetailView {
 
     private DetailActivityComponent activityComponent;
+    private Joke joke;
 
     @Inject
     DetailPresenter presenter;
@@ -37,7 +39,6 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
         }
 
         Intent intent = getIntent();
-        Joke joke = null;
         if (intent != null && intent.hasExtra(getString(R.string.joke))) {
             joke = intent.getParcelableExtra(getString(R.string.joke));
         }
@@ -72,6 +73,9 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
                 onBackPressed();
                 return true;
             case R.id.action_favourite:
+                if (joke != null) {
+                    presenter.update(joke);
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -80,5 +84,10 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     @Override
     public void updateFavouriteIcon(boolean favourite) {
         Log.i(DetailActivity.class.getSimpleName(), "update favourite icon");
+    }
+
+    @Override
+    public void showError(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
