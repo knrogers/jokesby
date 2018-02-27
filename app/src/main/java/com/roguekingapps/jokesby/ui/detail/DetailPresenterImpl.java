@@ -23,6 +23,11 @@ public class DetailPresenterImpl implements DetailPresenter {
     }
 
     @Override
+    public void query(String apiId) {
+        dataManager.query(this, apiId);
+    }
+
+    @Override
     public void update(Joke joke) {
         dataManager.updateJoke(this, joke);
     }
