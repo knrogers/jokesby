@@ -8,5 +8,7 @@ public interface DataManager {
 
     void loadJokes(MainPresenter mainPresenter);
 
+    void query(DetailPresenter detailPresenter, String apiId);
+
     void updateJoke(DetailPresenter detailPresenter, Joke joke);
 }

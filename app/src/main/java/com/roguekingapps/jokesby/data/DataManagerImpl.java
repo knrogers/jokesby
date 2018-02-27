@@ -1,6 +1,7 @@
 package com.roguekingapps.jokesby.data;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
@@ -27,6 +28,8 @@ import io.reactivex.functions.Consumer;
  */
 @Singleton
 public class DataManagerImpl implements DataManager {
+
+    private static final String TAG = DataManagerImpl.class.getSimpleName();
 
     private Context context;
     private ApiHelper apiHelper;
@@ -58,6 +61,34 @@ public class DataManagerImpl implements DataManager {
     }
 
     @Override
+    public void query(final DetailPresenter presenter, String apiId) {
+        Observer<Cursor> queryFavouritesObserver = new Observer<Cursor>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Cursor cursor) {
+                presenter.updateFavouriteIcon(cursor.getCount() >= 1);
+                cursor.close();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, e.getMessage(), e);
+                presenter.showError(context.getResources().getString(R.string.error_query_favourite));
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
+        databaseHelper.query(queryFavouritesObserver, apiId);
+    }
+
+    @Override
     public void updateJoke(final DetailPresenter presenter, final Joke joke) {
         Consumer<Integer> deleteFavouriteConsumer = new Consumer<Integer>() {
             @Override
@@ -73,7 +104,7 @@ public class DataManagerImpl implements DataManager {
     }
 
     private void insertJoke(final DetailPresenter presenter, final Joke joke) {
-        Observer<Uri> insertFavouriteConsumer = new Observer<Uri>() {
+        Observer<Uri> insertFavouriteObserver = new Observer<Uri>() {
             @Override
             public void onSubscribe(Disposable d) {
 
@@ -86,7 +117,7 @@ public class DataManagerImpl implements DataManager {
 
             @Override
             public void onError(Throwable e) {
-                Log.e(DataManagerImpl.class.getSimpleName(), e.getMessage(), e);
+                Log.e(TAG, e.getMessage(), e);
                 presenter.showError(context.getResources().getString(R.string.error_add_favourite));
             }
 
@@ -95,6 +126,6 @@ public class DataManagerImpl implements DataManager {
 
             }
         };
-        databaseHelper.insertJoke(insertFavouriteConsumer, joke);
+        databaseHelper.insertJoke(insertFavouriteObserver, joke);
     }
 }
