@@ -54,10 +54,4 @@ public class ApplicationModule {
     DatabaseHelper provideDatabaseHelper(DatabaseHelperImpl databaseHelper) {
         return databaseHelper;
     }
-
-    @Provides
-    @Singleton
-    DatabaseOpenHelper provideDataBaseOpenHelper() {
-        return new DatabaseOpenHelper(application);
-    }
 }
