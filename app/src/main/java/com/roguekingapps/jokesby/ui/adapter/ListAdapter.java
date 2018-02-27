@@ -2,6 +2,7 @@ package com.roguekingapps.jokesby.ui.adapter;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,10 +25,13 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     private Context context;
     private List<Joke> jokes;
     private JokeOnClickHandler clickHandler;
+    private Typeface robotoMedium;
 
     public ListAdapter(Context context, JokeOnClickHandler clickHandler) {
         this.context = context;
         this.clickHandler = clickHandler;
+        robotoMedium = Typeface.createFromAsset(context.getAssets(),
+                "Roboto-Medium.ttf");
     }
 
     @Override
@@ -45,6 +49,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.bind();
         Joke joke = jokes.get(position);
+        holder.binding.jokeTitle.setTypeface(robotoMedium);
         holder.binding.jokeTitle.setText(joke.getTitle());
     }
 
