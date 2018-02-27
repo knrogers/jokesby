@@ -21,7 +21,7 @@ public final class JokeContract  {
         static final String TABLE_NAME = "favourites";
         public static final String COLUMN_API_ID = "api_id";
         static final String COLUMN_TITLE = "title";
-        static final String COLUMN_BODY = "thumbnail";
+        static final String COLUMN_BODY = "body";
         static final String COLUMN_USER = "user";
         static final String COLUMN_URL = "url";
     }
