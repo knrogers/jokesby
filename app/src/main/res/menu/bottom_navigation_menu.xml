@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_hot"
+        android:enabled="true"
+        android:icon="@drawable/ic_whatshot_black"
+        android:title="@string/hot"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_random"
+        android:enabled="true"
+        android:icon="@drawable/ic_emoticon_black"
+        android:title="@string/random"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_favorites"
+        android:enabled="true"
+        android:icon="@drawable/ic_favorite_black"
+        android:title="@string/favourites"
+        app:showAsAction="ifRoom" />
+
+</menu>
