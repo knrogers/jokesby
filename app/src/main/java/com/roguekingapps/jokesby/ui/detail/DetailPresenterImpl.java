@@ -1,6 +1,7 @@
 package com.roguekingapps.jokesby.ui.detail;
 
 import com.roguekingapps.jokesby.data.DataManager;
+import com.roguekingapps.jokesby.data.network.model.Joke;
 import com.roguekingapps.jokesby.di.PerActivity;
 
 import javax.inject.Inject;
@@ -22,12 +23,17 @@ public class DetailPresenterImpl implements DetailPresenter {
     }
 
     @Override
-    public void updateJoke(String apiId) {
-        dataManager.updateJoke(this, apiId);
+    public void update(Joke joke) {
+        dataManager.updateJoke(this, joke);
     }
 
     @Override
     public void updateFavouriteIcon(boolean favourite) {
         detailView.updateFavouriteIcon(favourite);
+    }
+
+    @Override
+    public void showError(String message) {
+        detailView.showError(message);
     }
 }
