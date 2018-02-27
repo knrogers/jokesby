@@ -3,20 +3,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.constraint.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/joke_list_item_padding">
+        android:paddingBottom="@dimen/joke_list_item_padding_vertical"
+        android:paddingEnd="@dimen/joke_list_item_padding_horizontal"
+        android:paddingLeft="@dimen/joke_list_item_padding_horizontal"
+        android:paddingRight="@dimen/joke_list_item_padding_horizontal"
+        android:paddingStart="@dimen/joke_list_item_padding_horizontal"
+        android:paddingTop="@dimen/joke_list_item_padding_vertical">
 
-        <TextView
-            android:id="@+id/joke_title"
-            android:layout_width="0dp"
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="test test test" />
+            android:minHeight="@dimen/joke_list_item_card_view_min_height"
+            app:cardCornerRadius="@dimen/joke_list_item_card_view_corner_radius"
+            app:cardElevation="@dimen/joke_list_item_card_view_elevation">
 
-    </android.support.constraint.ConstraintLayout>
+            <TextView
+                android:id="@+id/joke_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/joke_list_item_title_padding"
+                android:textAlignment="center"
+                android:textSize="@dimen/joke_list_item_title_text_size"
+                tools:text="test test test" />
+
+        </android.support.v7.widget.CardView>
+    </RelativeLayout>
 </layout>

@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="joke_list_item_padding">16dp</dimen>
+    <dimen name="joke_list_item_padding_horizontal">16dp</dimen>
+    <dimen name="joke_list_item_padding_vertical">8dp</dimen>
+
+    <dimen name="joke_list_item_card_view_min_height">200dp</dimen>
+    <dimen name="joke_list_item_card_view_corner_radius">4dp</dimen>
+    <dimen name="joke_list_item_card_view_elevation">8dp</dimen>
+
+    <dimen name="joke_list_item_title_padding">16dp</dimen>
+    <dimen name="joke_list_item_title_text_size">36sp</dimen>
 </resources>
