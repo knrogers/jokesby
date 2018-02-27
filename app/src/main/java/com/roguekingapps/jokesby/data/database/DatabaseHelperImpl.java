@@ -2,6 +2,7 @@ package com.roguekingapps.jokesby.data.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 
 import com.roguekingapps.jokesby.data.database.JokeContract.JokeEntry;
@@ -33,6 +34,28 @@ public class DatabaseHelperImpl implements DatabaseHelper {
     }
 
     @Override
+    public void query(Observer<Cursor> queryFavouriteObserver, final String apiId) {
+        Observable<Cursor> observable = Observable.create(new ObservableOnSubscribe<Cursor>() {
+            @Override
+            public void subscribe(ObservableEmitter<Cursor> emitter) throws Exception {
+                Cursor cursor = context.getContentResolver().query(
+                        JokeEntry.CONTENT_URI, null,
+                        JokeEntry.COLUMN_API_ID,
+                        new String[]{apiId}, null);
+                if (cursor == null) {
+                    emitter.onError(new Exception("Cursor returned from query was null."));
+                    return;
+                }
+                emitter.onNext(cursor);
+                cursor.close();
+            }
+        });
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(queryFavouriteObserver);
+    }
+
+    @Override
     public void deleteJoke(Consumer<Integer> deleteFavouriteConsumer, String apiId) {
         Observable<Integer> observable =
                 Observable.just(context.getContentResolver().delete(
@@ -45,7 +68,7 @@ public class DatabaseHelperImpl implements DatabaseHelper {
     }
 
     @Override
-    public void insertJoke(Observer<Uri> insertFavouriteConsumer, Joke joke) {
+    public void insertJoke(Observer<Uri> insertFavouriteObserver, Joke joke) {
         final ContentValues contentValues = new ContentValues();
         contentValues.put(JokeEntry.COLUMN_API_ID, joke.getId());
         contentValues.put(JokeEntry.COLUMN_TITLE, joke.getTitle());
@@ -66,6 +89,6 @@ public class DatabaseHelperImpl implements DatabaseHelper {
         });
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(insertFavouriteConsumer);
+                .subscribe(insertFavouriteObserver);
     }
 }
