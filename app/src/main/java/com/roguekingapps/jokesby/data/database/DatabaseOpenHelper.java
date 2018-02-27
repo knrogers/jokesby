@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.roguekingapps.jokesby.data.database.JokeContract.JokeEntry;
-import com.roguekingapps.jokesby.di.ApplicationContext;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -20,7 +19,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     @Inject
-    public DatabaseOpenHelper(@ApplicationContext Context context) {
+    DatabaseOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -32,7 +31,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
                 JokeEntry.COLUMN_API_ID + " TEXT NOT NULL, " +
                 JokeEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
                 JokeEntry.COLUMN_BODY + " TEXT NOT NULL, " +
-                JokeEntry.COLUMN_USER + " TEXT NOT NULL " +
+                JokeEntry.COLUMN_USER + " TEXT NOT NULL, " +
                 JokeEntry.COLUMN_URL + " TEXT NOT NULL " +
                 ");";
         sqLiteDatabase.execSQL(sqlCreateDatabase);
