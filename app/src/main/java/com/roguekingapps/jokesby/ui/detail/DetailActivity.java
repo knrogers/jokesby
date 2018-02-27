@@ -46,6 +46,7 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
         }
 
         if (joke != null) {
+            presenter.query(joke.getId());
             binding.detailTextViewTitle.setText(joke.getTitle());
         }
     }
