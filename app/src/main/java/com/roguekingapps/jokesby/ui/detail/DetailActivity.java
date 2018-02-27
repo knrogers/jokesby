@@ -2,9 +2,9 @@ package com.roguekingapps.jokesby.ui.detail;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -23,6 +23,8 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
 
     private DetailActivityComponent activityComponent;
     private Joke joke;
+    private Menu menu;
+    private int drawableId = -1;
 
     @Inject
     DetailPresenter presenter;
@@ -62,6 +64,10 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.detail_menu, menu);
+        this.menu = menu;
+        if (drawableId != -1) {
+            updateFavouriteIcon(drawableId);
+        }
         return true;
     }
 
@@ -83,7 +89,23 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
 
     @Override
     public void updateFavouriteIcon(boolean favourite) {
-        Log.i(DetailActivity.class.getSimpleName(), "update favourite icon");
+        if (favourite) {
+            updateFavouriteIcon(R.drawable.ic_favorite);
+        } else {
+            updateFavouriteIcon(R.drawable.ic_favorite_border);
+        }
+    }
+
+    private void updateFavouriteIcon(int drawableId) {
+        // If user rotates device while database is being queried, menu could be null.
+        // If it is, invalidate the menu.
+        if (menu == null) {
+            this.drawableId = drawableId;
+            invalidateOptionsMenu();
+        } else {
+            MenuItem menuItem = menu.findItem(R.id.action_favourite);
+            menuItem.setIcon(ContextCompat.getDrawable(this, drawableId));
+        }
     }
 
     @Override
