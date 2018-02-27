@@ -3,6 +3,7 @@
     <string name="authority" translatable="false">com.roguekingapps.jokesby</string>
     <string name="joke" translatable="false">joke</string>
     <string name="favourite" translatable="false">favourite</string>
+    <string name="parameter_placeholder" translatable="false">=?</string>
     <string name="unknown_uri" translatable="false">Unknown uri: </string>
     <string name="insert_row_failed" translatable="false">Failed to insert row into </string>
     <string name="jokes_not_loaded">Jokes could not be loaded.</string>

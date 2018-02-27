@@ -14,7 +14,6 @@ import android.support.annotation.Nullable;
 import com.roguekingapps.jokesby.R;
 import com.roguekingapps.jokesby.data.database.JokeContract.JokeEntry;
 import com.roguekingapps.jokesby.di.Favourites;
-import com.roguekingapps.jokesby.di.FavouritesWithApiId;
 import com.roguekingapps.jokesby.di.component.DaggerDatabaseComponent;
 import com.roguekingapps.jokesby.di.component.DatabaseComponent;
 import com.roguekingapps.jokesby.di.module.DatabaseModule;
@@ -38,10 +37,6 @@ public class JokeContentProvider extends ContentProvider {
     @Inject
     @Favourites
     int favourites;
-
-    @Inject
-    @FavouritesWithApiId
-    int favouritesWithApiId;
 
     @Override
     public boolean onCreate() {
@@ -96,7 +91,18 @@ public class JokeContentProvider extends ContentProvider {
         if (context == null) {
             throw new NullPointerException(INVALID_CONTEXT_VALUE);
         }
-        return 0;
+
+        int match = uriMatcher.match(uri);
+        int rowsDeleted;
+        if (match == favourites) {
+            rowsDeleted = databaseOpenHelper.getReadableDatabase().delete(
+                    JokeEntry.TABLE_NAME,
+                    selection + context.getString(R.string.parameter_placeholder),
+                    selectionArgs);
+        } else {
+            throw new UnsupportedOperationException(context.getString(R.string.unknown_uri) + uri);
+        }
+        return rowsDeleted;
     }
 
     @Override
