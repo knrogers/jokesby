@@ -34,13 +34,11 @@ public class DatabaseHelperImpl implements DatabaseHelper {
 
     @Override
     public void deleteJoke(Consumer<Integer> deleteFavouriteConsumer, String apiId) {
-        Uri uri = JokeEntry.CONTENT_URI
-                .buildUpon()
-                .appendPath(JokeEntry.COLUMN_API_ID)
-                .appendPath(apiId)
-                .build();
-
-        Observable<Integer> observable = Observable.just(context.getContentResolver().delete(uri, null, null));
+        Observable<Integer> observable =
+                Observable.just(context.getContentResolver().delete(
+                        JokeEntry.CONTENT_URI,
+                        JokeEntry.COLUMN_API_ID,
+                        new String[]{apiId}));
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(deleteFavouriteConsumer);
