@@ -1,6 +1,5 @@
 package com.roguekingapps.jokesby.di.module;
 
-import com.roguekingapps.jokesby.ui.adapter.ListAdapter;
 import com.roguekingapps.jokesby.ui.main.MainActivity;
 import com.roguekingapps.jokesby.ui.main.MainPresenter;
 import com.roguekingapps.jokesby.ui.main.MainPresenterImpl;
@@ -21,11 +20,6 @@ public class MainActivityModule {
     @Provides
     MainView provideMainView() {
         return activity;
-    }
-
-    @Provides
-    ListAdapter provideListAdapter() {
-        return new ListAdapter(activity, activity);
     }
 
     @Provides
