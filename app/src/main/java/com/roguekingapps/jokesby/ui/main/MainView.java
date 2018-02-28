@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface MainView {
 
-    void showJokes(List<Joke> joke);
+    void showJokes(List<Joke> jokes);
 }
