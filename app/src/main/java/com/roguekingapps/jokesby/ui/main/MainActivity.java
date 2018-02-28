@@ -2,31 +2,29 @@ package com.roguekingapps.jokesby.ui.main;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.roguekingapps.jokesby.JokesbyApplication;
 import com.roguekingapps.jokesby.R;
 import com.roguekingapps.jokesby.data.network.model.Joke;
-import com.roguekingapps.jokesby.databinding.ActivityMainBinding;
-import com.roguekingapps.jokesby.di.component.MainActivityComponent;
 import com.roguekingapps.jokesby.di.component.DaggerMainActivityComponent;
+import com.roguekingapps.jokesby.di.component.MainActivityComponent;
 import com.roguekingapps.jokesby.di.module.MainActivityModule;
-import com.roguekingapps.jokesby.ui.adapter.ListAdapter;
 import com.roguekingapps.jokesby.ui.detail.DetailActivity;
+import com.roguekingapps.jokesby.ui.main.fragment.JokeListFragment;
+import com.roguekingapps.jokesby.ui.main.fragment.ListFragmentListener;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity implements MainView, ListAdapter.JokeOnClickHandler {
+public class MainActivity extends AppCompatActivity implements
+        MainView,
+        ListFragmentListener {
 
     private MainActivityComponent activityComponent;
-
-    @Inject
-    ListAdapter adapter;
+    private JokeListFragment jokeListFragment;
 
     @Inject
     MainPresenter presenter;
@@ -34,16 +32,33 @@ public class MainActivity extends AppCompatActivity implements MainView, ListAda
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        DataBindingUtil.setContentView(this, R.layout.activity_main);
         getActivityComponent().inject(this);
 
-        binding.mainRecyclerView.setAdapter(adapter);
+        if (jokeListFragment == null) {
+            jokeListFragment = JokeListFragment.newInstance();
+        }
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.list_container, jokeListFragment, "jokeListFragment")
+                .commit();
     }
 
     @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
+    public void loadJokes() {
         presenter.loadJokes();
+    }
+
+    @Override
+    public void showDetailActivity(Joke joke) {
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra(getString(R.string.joke), joke);
+        startActivity(intent);
+    }
+
+    @Override
+    public void showJokes(List<Joke> jokes) {
+        jokeListFragment.showJokes(jokes);
     }
 
     public MainActivityComponent getActivityComponent() {
@@ -54,26 +69,5 @@ public class MainActivity extends AppCompatActivity implements MainView, ListAda
                     .build();
         }
         return activityComponent;
-    }
-
-    @Override
-    public void showJokes(List<Joke> jokes) {
-        if (jokes == null) {
-            showToast(getString(R.string.jokes_not_loaded));
-        } else {
-            adapter.setJokes(jokes);
-            adapter.notifyDataSetChanged();
-        }
-    }
-
-    public void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onClick(Joke joke) {
-        Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra(getString(R.string.joke), joke);
-        startActivity(intent);
     }
 }
