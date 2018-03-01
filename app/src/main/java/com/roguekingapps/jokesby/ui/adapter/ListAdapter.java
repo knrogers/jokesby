@@ -98,6 +98,7 @@ public class ListAdapter extends RecyclerView.Adapter {
             jokes.remove(jokes.size() - 1);
             notifyItemRemoved(jokes.size());
         }
+        loading = false;
     }
 
     public List<Joke> getJokes() {
