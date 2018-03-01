@@ -2,15 +2,22 @@ package com.roguekingapps.jokesby.ui.main;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.roguekingapps.jokesby.JokesbyApplication;
 import com.roguekingapps.jokesby.R;
 import com.roguekingapps.jokesby.data.network.model.Joke;
+import com.roguekingapps.jokesby.databinding.ActivityMainBinding;
 import com.roguekingapps.jokesby.di.component.DaggerMainActivityComponent;
 import com.roguekingapps.jokesby.di.component.MainActivityComponent;
 import com.roguekingapps.jokesby.di.module.MainActivityModule;
+import com.roguekingapps.jokesby.ui.bottomnavigation.BottomNavigationItemReselectedListener;
+import com.roguekingapps.jokesby.ui.bottomnavigation.BottomNavigationItemReselectedListener.OnNavigationItemReselectedCallback;
+import com.roguekingapps.jokesby.ui.bottomnavigation.BottomNavigationItemSelectedListener;
+import com.roguekingapps.jokesby.ui.bottomnavigation.BottomNavigationItemSelectedListener.OnNavigationItemSelectedCallback;
 import com.roguekingapps.jokesby.ui.detail.DetailActivity;
 import com.roguekingapps.jokesby.ui.main.fragment.JokeListFragment;
 import com.roguekingapps.jokesby.ui.main.fragment.ListFragmentListener;
@@ -21,10 +28,18 @@ import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity implements
         MainView,
-        ListFragmentListener {
+        ListFragmentListener,
+        OnNavigationItemSelectedCallback,
+        OnNavigationItemReselectedCallback {
 
     private MainActivityComponent activityComponent;
-    private JokeListFragment jokeListFragment;
+    private String listFragmentTag;
+
+    @Inject
+    BottomNavigationItemSelectedListener bottomNavigationItemSelectedListener;
+
+    @Inject
+    BottomNavigationItemReselectedListener bottomNavigationItemReselectedListener;
 
     @Inject
     MainPresenter presenter;
@@ -32,16 +47,37 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DataBindingUtil.setContentView(this, R.layout.activity_main);
+        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         getActivityComponent().inject(this);
 
-        if (jokeListFragment == null) {
-            jokeListFragment = JokeListFragment.newInstance();
+        binding.bottomNavigation
+                .setOnNavigationItemSelectedListener(bottomNavigationItemSelectedListener);
+        binding.bottomNavigation
+                .setOnNavigationItemReselectedListener(bottomNavigationItemReselectedListener);
+        listFragmentTag = getListFragmentTag(savedInstanceState);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        JokeListFragment selectedFragment =
+                (JokeListFragment) fragmentManager.findFragmentByTag(listFragmentTag);
+        if (selectedFragment == null) {
+            selectedFragment = JokeListFragment.newInstance();
         }
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.list_container, jokeListFragment, "jokeListFragment")
+        fragmentManager.beginTransaction()
+                .replace(R.id.list_container, selectedFragment, listFragmentTag)
                 .commit();
+    }
+
+    private String getListFragmentTag(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            return savedInstanceState.getString
+                    (getString(R.string.list_fragment_tag), getString(R.string.random));
+        }
+        return getString(R.string.random);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(getString(R.string.list_fragment_tag), listFragmentTag);
     }
 
     @Override
@@ -58,7 +94,36 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void showJokes(List<Joke> jokes) {
-        jokeListFragment.showJokes(jokes);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        JokeListFragment selectedFragment =
+                (JokeListFragment) fragmentManager.findFragmentByTag(listFragmentTag);
+        if (selectedFragment != null) {
+            selectedFragment.showJokes(jokes);
+        }
+    }
+
+    @Override
+    public void updateListFragment(JokeListFragment jokeListFragment, String listFragmentTag) {
+        this.listFragmentTag = listFragmentTag;
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.list_container, jokeListFragment, listFragmentTag)
+                .commit();
+    }
+
+    @Override
+    public void updateCurrentFragment(JokeListFragment jokeListFragment, String listFragmentTag) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        JokeListFragment selectedFragment =
+                (JokeListFragment) fragmentManager.findFragmentByTag(listFragmentTag);
+        if (selectedFragment.getScrollOffset() > 0) {
+            selectedFragment.resetScrollPosition();
+        } else {
+            this.listFragmentTag = listFragmentTag;
+            fragmentManager.beginTransaction()
+                    .replace(R.id.list_container, jokeListFragment, listFragmentTag)
+                    .commit();
+        }
     }
 
     public MainActivityComponent getActivityComponent() {
