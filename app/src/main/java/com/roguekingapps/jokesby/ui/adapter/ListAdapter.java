@@ -106,8 +106,12 @@ public class ListAdapter extends RecyclerView.Adapter {
     }
 
     public void setJokes(List<Joke> jokes) {
+        this.jokes = jokes;
+    }
+
+    public void addJokes(List<Joke> jokes) {
         if (this.jokes == null) {
-            this.jokes = new ArrayList<>();
+            return;
         }
         this.jokes.addAll(jokes);
     }
