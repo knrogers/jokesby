@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +44,7 @@ public class JokeListFragment extends Fragment  implements
     private FragmentListJokeBinding binding;
     private ListFragmentListener listener;
     private JokeListFragmentComponent fragmentComponent;
+    private RecyclerView.SmoothScroller smoothScroller;
 
     @Inject
     ListAdapter adapter;
@@ -68,6 +70,14 @@ public class JokeListFragment extends Fragment  implements
         binding = FragmentListJokeBinding.inflate(inflater, container, false);
         getFragmentComponent().inject(this);
         binding.listRecyclerView.setAdapter(adapter);
+        Context context = getContext();
+        if (context != null) {
+            smoothScroller = new LinearSmoothScroller(context) {
+                @Override protected int getVerticalSnapPreference() {
+                    return LinearSmoothScroller.SNAP_TO_START;
+                }
+            };
+        }
         onPreLoad();
         listener.loadJokes();
         final LinearLayoutManager linearLayoutManager =
@@ -145,6 +155,17 @@ public class JokeListFragment extends Fragment  implements
                 listener.loadJokes();
             }
         });
+    }
+
+    public void resetScrollPosition() {
+        smoothScroller.setTargetPosition(0);
+        LinearLayoutManager layoutManager =
+                (LinearLayoutManager) binding.listRecyclerView.getLayoutManager();
+        layoutManager.startSmoothScroll(smoothScroller);
+    }
+
+    public int getScrollOffset() {
+        return binding.listRecyclerView.computeVerticalScrollOffset();
     }
 
     public JokeListFragmentComponent getFragmentComponent() {
