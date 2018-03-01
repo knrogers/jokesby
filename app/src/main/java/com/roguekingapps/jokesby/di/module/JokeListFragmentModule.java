@@ -17,6 +17,6 @@ public class JokeListFragmentModule {
 
     @Provides
     ListAdapter provideListAdapter() {
-        return new ListAdapter(jokeListFragment.getContext(), jokeListFragment);
+        return new ListAdapter(jokeListFragment.getContext(), jokeListFragment, jokeListFragment);
     }
 }
