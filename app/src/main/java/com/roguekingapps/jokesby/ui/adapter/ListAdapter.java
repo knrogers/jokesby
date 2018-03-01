@@ -9,11 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.roguekingapps.jokesby.data.network.model.Joke;
-import com.roguekingapps.jokesby.databinding.LayoutJokeListItemBinding;
-import com.roguekingapps.jokesby.databinding.LayoutProgressBarBinding;
+import com.roguekingapps.jokesby.databinding.LayoutListItemJokeBinding;
+import com.roguekingapps.jokesby.databinding.LayoutListItemProgressBarBinding;
 import com.roguekingapps.jokesby.di.PerActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,13 +46,13 @@ public class ListAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_ITEM) {
-            LayoutJokeListItemBinding binding = LayoutJokeListItemBinding.inflate(
+            LayoutListItemJokeBinding binding = LayoutListItemJokeBinding.inflate(
                     LayoutInflater.from(context),
                     parent,
                     false);
             return new JokeViewHolder(binding);
         } else if (viewType == VIEW_LOADING) {
-            LayoutProgressBarBinding binding = LayoutProgressBarBinding.inflate(
+            LayoutListItemProgressBarBinding binding = LayoutListItemProgressBarBinding.inflate(
                     LayoutInflater.from(context),
                     parent,
                     false);
@@ -129,9 +128,9 @@ public class ListAdapter extends RecyclerView.Adapter {
     }
 
     class JokeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private LayoutJokeListItemBinding layoutJokeListItemBinding;
+        private LayoutListItemJokeBinding layoutJokeListItemBinding;
 
-        JokeViewHolder(LayoutJokeListItemBinding layoutJokeListItemBinding) {
+        JokeViewHolder(LayoutListItemJokeBinding layoutJokeListItemBinding) {
             super(layoutJokeListItemBinding.getRoot());
             this.layoutJokeListItemBinding = layoutJokeListItemBinding;
             View view = this.layoutJokeListItemBinding.getRoot();
@@ -149,9 +148,9 @@ public class ListAdapter extends RecyclerView.Adapter {
     }
 
     class LoadingViewHolder extends RecyclerView.ViewHolder {
-        private LayoutProgressBarBinding layoutProgressBarBinding;
+        private LayoutListItemProgressBarBinding layoutProgressBarBinding;
 
-        LoadingViewHolder(LayoutProgressBarBinding layoutProgressBarBinding) {
+        LoadingViewHolder(LayoutListItemProgressBarBinding layoutProgressBarBinding) {
             super(layoutProgressBarBinding.getRoot());
             this.layoutProgressBarBinding = layoutProgressBarBinding;
         }
