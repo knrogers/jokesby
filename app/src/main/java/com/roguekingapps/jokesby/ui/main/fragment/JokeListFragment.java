@@ -89,11 +89,11 @@ public class JokeListFragment extends Fragment  implements
     }
 
     @Override
-    public void showJokes(List<Joke> jokes) {
+    public void showJokes(final List<Joke> jokes) {
         binding.listProgressBar.setVisibility(View.GONE);
         if (jokes == null) {
             showToast(getString(R.string.jokes_not_loaded));
-        } else if (adapter.getJokes() == null) {
+        } else {
             binding.listRecyclerView.setVisibility(View.VISIBLE);
             if (adapter.getJokes() == null) {
                 adapter.setJokes(jokes);
@@ -138,7 +138,7 @@ public class JokeListFragment extends Fragment  implements
         //at the end of the list.
         List<Joke> jokes = new ArrayList<>();
         jokes.add(null);
-        adapter.setJokes(jokes);
+        adapter.addJokes(jokes);
         binding.listRecyclerView.post(new Runnable() {
             public void run() {
                 adapter.notifyItemInserted(adapter.getJokes().size() - 1);
