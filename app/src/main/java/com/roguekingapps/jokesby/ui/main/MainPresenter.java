@@ -6,6 +6,9 @@ import java.util.List;
 
 public interface MainPresenter {
 
-    void loadJokes();
+    void loadJokes(String fragmentTag);
+
     void showJokes(List<Joke> jokes);
+
+    void showError(String message);
 }

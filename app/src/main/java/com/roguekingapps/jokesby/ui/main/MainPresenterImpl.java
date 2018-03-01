@@ -24,12 +24,17 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
-    public void loadJokes() {
-        dataManager.loadJokes(this);
+    public void loadJokes(String fragmentTag) {
+        dataManager.loadJokes(this, fragmentTag);
     }
 
     @Override
     public void showJokes(List<Joke> jokes) {
         mainView.showJokes(jokes);
+    }
+
+    @Override
+    public void showError(String message) {
+        mainView.showError(message);
     }
 }

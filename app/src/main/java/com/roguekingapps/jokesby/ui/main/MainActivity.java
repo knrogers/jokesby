@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.roguekingapps.jokesby.JokesbyApplication;
 import com.roguekingapps.jokesby.R;
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void loadJokes() {
-        presenter.loadJokes();
+        presenter.loadJokes(listFragmentTag);
     }
 
     @Override
@@ -100,6 +101,11 @@ public class MainActivity extends AppCompatActivity implements
         if (selectedFragment != null) {
             selectedFragment.showJokes(jokes);
         }
+    }
+
+    @Override
+    public void showError(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
