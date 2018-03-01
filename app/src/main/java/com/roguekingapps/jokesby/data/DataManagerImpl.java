@@ -3,6 +3,7 @@ package com.roguekingapps.jokesby.data;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.text.Html;
 import android.util.Log;
 
 import com.roguekingapps.jokesby.R;
@@ -14,6 +15,7 @@ import com.roguekingapps.jokesby.di.ApplicationContext;
 import com.roguekingapps.jokesby.ui.detail.DetailPresenter;
 import com.roguekingapps.jokesby.ui.main.MainPresenter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -52,12 +54,37 @@ public class DataManagerImpl implements DataManager {
                 if (jokeContainer != null) {
                     List<Joke> jokes = jokeContainer.getJokes();
                     if (jokes != null && !jokes.isEmpty()) {
-                        presenter.showJokes(jokes);
+                        List<Joke> filteredJokes = getFilteredJokes(jokes);
+                        presenter.showJokes(filteredJokes);
                     }
                 }
             }
         };
         apiHelper.loadJokes(jokeConsumer);
+    }
+
+    private List<Joke> getFilteredJokes(List<Joke> jokes) {
+        List<Joke> filteredJokes = new ArrayList<>();
+        for (Joke joke : jokes) {
+            String body = joke.getBody();
+            if (!body.contains("[removed]") && !body.contains("[deleted]")) {
+                joke.setTitle(fromHtml(joke.getTitle()));
+                joke.setBody(fromHtml(body));
+                filteredJokes.add(joke);
+            }
+        }
+        return filteredJokes;
+    }
+
+    @SuppressWarnings("deprecation")
+    private String fromHtml(String html){
+        String result;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            result = Html.fromHtml(html,Html.FROM_HTML_MODE_LEGACY).toString();
+        } else {
+            result = Html.fromHtml(html).toString();
+        }
+        return result;
     }
 
     @Override
