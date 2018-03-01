@@ -28,7 +28,7 @@ public class ApplicationModule {
 
     @Provides
     @ApplicationContext
-    Context provideContext() {
+    Context provideApplicationContext() {
         return application;
     }
 
