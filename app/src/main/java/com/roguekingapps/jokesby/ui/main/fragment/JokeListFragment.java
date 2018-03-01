@@ -21,7 +21,6 @@ import com.roguekingapps.jokesby.di.component.JokeListFragmentComponent;
 import com.roguekingapps.jokesby.di.module.JokeListFragmentModule;
 import com.roguekingapps.jokesby.ui.adapter.ListAdapter;
 import com.roguekingapps.jokesby.ui.adapter.OnLoadMoreListener;
-import com.roguekingapps.jokesby.ui.main.MainView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +36,6 @@ import javax.inject.Inject;
  * create an instance of this fragment.
  */
 public class JokeListFragment extends Fragment  implements
-        MainView,
         ListAdapter.JokeOnClickHandler,
         OnLoadMoreListener {
 
@@ -77,18 +75,20 @@ public class JokeListFragment extends Fragment  implements
                     return LinearSmoothScroller.SNAP_TO_START;
                 }
             };
+            final LinearLayoutManager linearLayoutManager =
+                    (LinearLayoutManager) binding.listRecyclerView.getLayoutManager();
+            if (context.getString(R.string.random).equals(getTag())) {
+                binding.listRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                        super.onScrolled(recyclerView, dx, dy);
+                        adapter.loadMore(linearLayoutManager);
+                    }
+                });
+            }
         }
         onPreLoad();
         listener.loadJokes();
-        final LinearLayoutManager linearLayoutManager =
-                (LinearLayoutManager) binding.listRecyclerView.getLayoutManager();
-        binding.listRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                adapter.loadMore(linearLayoutManager);
-            }
-        });
         return binding.getRoot();
     }
 
@@ -98,7 +98,6 @@ public class JokeListFragment extends Fragment  implements
         binding.listProgressBar.setVisibility(View.VISIBLE);
     }
 
-    @Override
     public void showJokes(final List<Joke> jokes) {
         binding.listProgressBar.setVisibility(View.GONE);
         if (jokes == null) {
