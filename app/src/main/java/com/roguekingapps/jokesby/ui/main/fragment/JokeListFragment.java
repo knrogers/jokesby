@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +19,10 @@ import com.roguekingapps.jokesby.di.component.DaggerJokeListFragmentComponent;
 import com.roguekingapps.jokesby.di.component.JokeListFragmentComponent;
 import com.roguekingapps.jokesby.di.module.JokeListFragmentModule;
 import com.roguekingapps.jokesby.ui.adapter.ListAdapter;
+import com.roguekingapps.jokesby.ui.adapter.OnLoadMoreListener;
 import com.roguekingapps.jokesby.ui.main.MainView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -33,8 +37,10 @@ import javax.inject.Inject;
  */
 public class JokeListFragment extends Fragment  implements
         MainView,
-        ListAdapter.JokeOnClickHandler {
+        ListAdapter.JokeOnClickHandler,
+        OnLoadMoreListener {
 
+    private FragmentListJokeBinding binding;
     private ListFragmentListener listener;
     private JokeListFragmentComponent fragmentComponent;
 
@@ -59,19 +65,43 @@ public class JokeListFragment extends Fragment  implements
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        FragmentListJokeBinding binding = FragmentListJokeBinding.inflate(inflater, container, false);
+        binding = FragmentListJokeBinding.inflate(inflater, container, false);
         getFragmentComponent().inject(this);
         binding.listRecyclerView.setAdapter(adapter);
+        onPreLoad();
         listener.loadJokes();
+        final LinearLayoutManager linearLayoutManager =
+                (LinearLayoutManager) binding.listRecyclerView.getLayoutManager();
+        binding.listRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                adapter.loadMore(linearLayoutManager);
+            }
+        });
         return binding.getRoot();
+    }
+
+    private void onPreLoad() {
+        binding.listRecyclerView.setVisibility(View.GONE);
+        binding.listEmptyView.setVisibility(View.GONE);
+        binding.listProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showJokes(List<Joke> jokes) {
+        binding.listProgressBar.setVisibility(View.GONE);
         if (jokes == null) {
             showToast(getString(R.string.jokes_not_loaded));
-        } else {
-            adapter.setJokes(jokes);
+        } else if (adapter.getJokes() == null) {
+            binding.listRecyclerView.setVisibility(View.VISIBLE);
+            if (adapter.getJokes() == null) {
+                adapter.setJokes(jokes);
+            } else {
+                //   remove progress item
+                adapter.removeLast();
+                adapter.addJokes(jokes);
+            }
             adapter.notifyDataSetChanged();
         }
     }
@@ -100,6 +130,21 @@ public class JokeListFragment extends Fragment  implements
     public void onDetach() {
         super.onDetach();
         listener = null;
+    }
+
+    @Override
+    public void onLoadMore() {
+        //add null so that the adapter will check view type and show progress bar
+        //at the end of the list.
+        List<Joke> jokes = new ArrayList<>();
+        jokes.add(null);
+        adapter.setJokes(jokes);
+        binding.listRecyclerView.post(new Runnable() {
+            public void run() {
+                adapter.notifyItemInserted(adapter.getJokes().size() - 1);
+                listener.loadJokes();
+            }
+        });
     }
 
     public JokeListFragmentComponent getFragmentComponent() {
