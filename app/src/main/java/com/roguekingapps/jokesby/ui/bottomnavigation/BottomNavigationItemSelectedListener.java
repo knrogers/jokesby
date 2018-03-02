@@ -30,10 +30,13 @@ public class BottomNavigationItemSelectedListener implements BottomNavigationVie
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         JokeListFragment listFragment;
+        listFragment = JokeListFragment.newInstance();
         switch (item.getItemId()) {
             case R.id.action_random:
-                listFragment = JokeListFragment.newInstance();
                 callback.updateListFragment(listFragment, context.getString(R.string.random));
+                break;
+            case R.id.action_favorites:
+                callback.updateListFragment(listFragment, context.getString(R.string.favourites));
                 break;
         }
         return true;

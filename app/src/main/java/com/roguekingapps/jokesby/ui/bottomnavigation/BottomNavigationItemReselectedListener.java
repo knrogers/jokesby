@@ -14,7 +14,6 @@ import javax.inject.Inject;
 /**
  * Handles reselection events on bottom navigation items.
  */
-
 public class BottomNavigationItemReselectedListener implements BottomNavigationView.OnNavigationItemReselectedListener {
 
     private Context context;
@@ -31,12 +30,17 @@ public class BottomNavigationItemReselectedListener implements BottomNavigationV
     @Override
     public void onNavigationItemReselected(@NonNull MenuItem item) {
         JokeListFragment listFragment;
+        listFragment = JokeListFragment.newInstance();
         switch (item.getItemId()) {
             case R.id.action_random:
-                listFragment = JokeListFragment.newInstance();
                 callback.updateCurrentFragment(
                         listFragment,
                         context.getString(R.string.random));
+                break;
+            case R.id.action_favorites:
+                callback.updateCurrentFragment(
+                        listFragment,
+                        context.getString(R.string.favourites));
                 break;
         }
     }
