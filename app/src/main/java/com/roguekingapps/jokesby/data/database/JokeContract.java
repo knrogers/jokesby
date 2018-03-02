@@ -20,10 +20,10 @@ public final class JokeContract  {
         static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_FAVOURITES).build();
         static final String TABLE_NAME = "favourites";
         public static final String COLUMN_API_ID = "api_id";
-        static final String COLUMN_TITLE = "title";
-        static final String COLUMN_BODY = "body";
-        static final String COLUMN_USER = "user";
-        static final String COLUMN_URL = "url";
+        public static final String COLUMN_TITLE = "title";
+        public static final String COLUMN_BODY = "body";
+        public static final String COLUMN_USER = "user";
+        public static final String COLUMN_URL = "url";
     }
 }
 
