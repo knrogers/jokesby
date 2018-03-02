@@ -2,6 +2,7 @@ package com.roguekingapps.jokesby.di.module;
 
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Typeface;
 
 import com.roguekingapps.jokesby.data.DataManager;
 import com.roguekingapps.jokesby.data.DataManagerImpl;
@@ -53,5 +54,11 @@ public class ApplicationModule {
     @Singleton
     DatabaseHelper provideDatabaseHelper(DatabaseHelperImpl databaseHelper) {
         return databaseHelper;
+    }
+
+    @Provides
+    @Singleton
+    Typeface provideRobotMedium() {
+        return Typeface.createFromAsset(application.getAssets(), "Roboto-Medium.ttf");
     }
 }

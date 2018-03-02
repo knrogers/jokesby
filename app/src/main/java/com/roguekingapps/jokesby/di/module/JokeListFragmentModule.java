@@ -1,5 +1,7 @@
 package com.roguekingapps.jokesby.di.module;
 
+import android.graphics.Typeface;
+
 import com.roguekingapps.jokesby.ui.adapter.ListAdapter;
 import com.roguekingapps.jokesby.ui.main.fragment.JokeListFragment;
 
@@ -16,7 +18,7 @@ public class JokeListFragmentModule {
     }
 
     @Provides
-    ListAdapter provideListAdapter() {
-        return new ListAdapter(jokeListFragment.getContext(), jokeListFragment, jokeListFragment);
+    ListAdapter provideListAdapter(Typeface robotoMedium) {
+        return new ListAdapter(jokeListFragment.getContext(), jokeListFragment, jokeListFragment, robotoMedium);
     }
 }

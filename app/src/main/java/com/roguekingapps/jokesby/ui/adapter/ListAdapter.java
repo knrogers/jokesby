@@ -35,12 +35,12 @@ public class ListAdapter extends RecyclerView.Adapter {
     public ListAdapter(
             Context context,
             JokeOnClickHandler clickHandler,
-            OnLoadMoreListener onLoadMoreListener) {
+            OnLoadMoreListener onLoadMoreListener,
+            Typeface robotoMedium) {
         this.context = context;
         this.clickHandler = clickHandler;
         this.onLoadMoreListener = onLoadMoreListener;
-        robotoMedium = Typeface.createFromAsset(context.getAssets(),
-                "Roboto-Medium.ttf");
+        this.robotoMedium = robotoMedium;
     }
 
     @Override
