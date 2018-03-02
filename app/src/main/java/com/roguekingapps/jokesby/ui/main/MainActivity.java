@@ -83,7 +83,11 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void loadJokes() {
-        presenter.loadJokes(listFragmentTag);
+        if (listFragmentTag.equals(getString(R.string.random))) {
+            presenter.loadFromApi();
+        } else if (listFragmentTag.equals(getString(R.string.favourites))) {
+            presenter.loadFromFavourites();
+        }
     }
 
     @Override
