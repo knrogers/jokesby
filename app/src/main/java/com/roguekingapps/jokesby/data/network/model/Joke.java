@@ -18,6 +18,14 @@ public class Joke implements Parcelable {
 
     private String url;
 
+    public Joke(String id, String title, String body, String user, String url) {
+        this.id = id;
+        this.title = title;
+        this.body = body;
+        this.user = user;
+        this.url = url;
+    }
+
     protected Joke(Parcel in) {
         id = in.readString();
         title = in.readString();
