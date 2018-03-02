@@ -118,9 +118,9 @@ public class DataManagerImpl implements DataManager {
     private String fromHtml(String html){
         String result;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            result = Html.fromHtml(html,Html.FROM_HTML_MODE_LEGACY).toString();
+            result = Html.fromHtml(html.replace("\n","<br />"),Html.FROM_HTML_MODE_LEGACY).toString();
         } else {
-            result = Html.fromHtml(html).toString();
+            result = Html.fromHtml(html.replace("\n","<br />")).toString();
         }
         return result;
     }
