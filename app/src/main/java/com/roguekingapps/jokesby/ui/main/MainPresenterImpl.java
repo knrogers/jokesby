@@ -24,8 +24,13 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
-    public void loadJokes(String fragmentTag) {
-        dataManager.loadJokes(this, fragmentTag);
+    public void loadFromApi() {
+        dataManager.loadFromApi(this);
+    }
+
+    @Override
+    public void loadFromFavourites() {
+        dataManager.loadFromFavourites(this);
     }
 
     @Override

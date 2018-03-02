@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface MainPresenter {
 
-    void loadJokes(String fragmentTag);
+    void loadFromApi();
+
+    void loadFromFavourites();
 
     void showJokes(List<Joke> jokes);
 
