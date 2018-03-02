@@ -14,4 +14,5 @@
     <string name="error_query_favourite">Could not access favourites.</string>
     <string name="list_fragment_tag">listFragmentTag</string>
     <string name="joke_list_fragment_tag">jokeListFragment</string>
+    <string name="submitted_by">Submitted by&#xA0;</string>
 </resources>

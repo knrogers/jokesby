@@ -2,9 +2,13 @@ package com.roguekingapps.jokesby.ui.detail;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -29,6 +33,9 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     @Inject
     DetailPresenter presenter;
 
+    @Inject
+    Typeface robotoMedium;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,8 +54,29 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
 
         if (joke != null) {
             presenter.query(joke.getId());
+            binding.detailTextViewTitle.setTypeface(robotoMedium);
             binding.detailTextViewTitle.setText(joke.getTitle());
+
+            binding.detailTextViewBody.setTypeface(robotoMedium);
+            binding.detailTextViewBody.setText(joke.getBody());
+
+            binding.detailTextViewSubmittedBy.setTypeface(robotoMedium);
+            Spanned submittedBy = fromHtml(getString(R.string.submitted_by) +
+                    "<a href=\"" + joke.getUrl() + "\">/u/" + joke.getUser() + "</a>");
+            binding.detailTextViewSubmittedBy.setText(submittedBy);
+            binding.detailTextViewSubmittedBy.setMovementMethod(LinkMovementMethod.getInstance());
         }
+    }
+
+    @SuppressWarnings("deprecation")
+    private Spanned fromHtml(String html){
+        Spanned result;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            result = Html.fromHtml(html,Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            result = Html.fromHtml(html);
+        }
+        return result;
     }
 
     public DetailActivityComponent getActivityComponent() {
