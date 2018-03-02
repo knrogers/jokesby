@@ -6,7 +6,9 @@ import com.roguekingapps.jokesby.ui.main.MainPresenter;
 
 public interface DataManager {
 
-    void loadJokes(MainPresenter mainPresenter);
+    void loadFromApi(MainPresenter mainPresenter);
+
+    void loadFromFavourites(MainPresenter mainPresenter);
 
     void query(DetailPresenter detailPresenter, String apiId);
 
