@@ -12,6 +12,8 @@ public interface DatabaseHelper {
 
     void query(Observer<Cursor> queryFavouriteObserver, String apiId);
 
+    void queryAll(Observer<Cursor> queryAllFavouritesObserver);
+
     void deleteJoke(Consumer<Integer> deleteFavouriteConsumer, String apiId);
 
     void insertJoke(Observer<Uri> insertFavouriteObserver, Joke joke);

@@ -57,6 +57,25 @@ public class DatabaseHelperImpl implements DatabaseHelper {
     }
 
     @Override
+    public void queryAll(Observer<Cursor> queryAllFavouritesObserver) {
+        Observable<Cursor> observable = Observable.create(new ObservableOnSubscribe<Cursor>() {
+            @Override
+            public void subscribe(ObservableEmitter<Cursor> emitter) throws Exception {
+                Cursor cursor = context.getContentResolver()
+                        .query(JokeEntry.CONTENT_URI, null, null, null, null);
+                if (cursor == null) {
+                    emitter.onError(new Exception("Cursor returned from query was null."));
+                    return;
+                }
+                emitter.onNext(cursor);
+            }
+        });
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(queryAllFavouritesObserver);
+    }
+
+    @Override
     public void deleteJoke(Consumer<Integer> deleteFavouriteConsumer, String apiId) {
         Observable<Integer> observable =
                 Observable.just(context.getContentResolver().delete(
