@@ -29,7 +29,10 @@
                     android:id="@+id/detail_text_view_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/detail_text_view_title_padding"
+                    android:paddingTop="@dimen/detail_text_view_title_padding"
+                    android:paddingStart="@dimen/detail_text_view_title_padding"
+                    android:paddingEnd="@dimen/detail_text_view_title_padding"
+                    android:paddingBottom="@dimen/detail_text_view_title_padding_bottom"
                     android:background="@color/accent"
                     android:textAlignment="center"
                     android:textSize="@dimen/detail_text_view_title_text_size"
@@ -62,5 +65,20 @@
 
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/detail_fab_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/detail_fab_share_margin"
+            android:scaleType="center"
+            android:src="@drawable/ic_share_black"
+            android:tint="@color/white"
+            app:elevation="@dimen/detail_fab_share_elevation"
+            app:fabSize="normal"
+            app:backgroundTint="@color/primary"
+            app:layout_anchor="@id/detail_text_view_title"
+            app:layout_anchorGravity="end|bottom"/>
+
     </android.support.design.widget.CoordinatorLayout>
 </layout>
