@@ -17,4 +17,11 @@
     <string name="submitted_by">Submitted by&#xA0;</string>
     <string name="share_via">Share via</string>
     <string name="shared_via_jokesby">\n\nShared via Jokesby</string>
+    <string name="sad_emoticon">sad emoticon</string>
+    <string name="neutral_emoticon">neutral emoticon</string>
+    <string name="surprised_emoticon">surprised emoticon</string>
+    <string name="tongue_out_emoticon">tongue out emoticon</string>
+    <string name="happy_emoticon">happy emoticon</string>
+    <string name="laugh_emoticon">laugh_emoticon</string>
+    <string name="rating">Rating</string>
 </resources>
