@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/rating_bar_margin_top"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/detail_image_view_laugh"
+        android:layout_width="@dimen/detail_image_view_width"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/laugh_emoticon"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_laugh"
+        android:tint="@color/gray_semi_transparent_88"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/detail_image_view_happy"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/detail_image_view_happy"
+        android:layout_width="@dimen/detail_image_view_width"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/happy_emoticon"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_happy"
+        android:tint="@color/gray_semi_transparent_88"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/detail_image_view_laugh"
+        app:layout_constraintEnd_toStartOf="@id/detail_image_view_tongue_out"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/detail_image_view_tongue_out"
+        android:layout_width="@dimen/detail_image_view_width"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/tongue_out_emoticon"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_tongue_out"
+        android:tint="@color/gray_semi_transparent_88"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/detail_image_view_happy"
+        app:layout_constraintEnd_toStartOf="@id/detail_image_view_surprised"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/detail_image_view_surprised"
+        android:layout_width="@dimen/detail_image_view_width"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/surprised_emoticon"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_surprised"
+        android:tint="@color/gray_semi_transparent_88"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/detail_image_view_tongue_out"
+        app:layout_constraintEnd_toStartOf="@id/detail_image_view_neutral"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/detail_image_view_neutral"
+        android:layout_width="@dimen/detail_image_view_width"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/neutral_emoticon"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_neutral"
+        android:tint="@color/gray_semi_transparent_88"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/detail_image_view_surprised"
+        app:layout_constraintEnd_toStartOf="@id/detail_image_view_sad"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/detail_image_view_sad"
+        android:layout_width="@dimen/detail_image_view_width"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/sad_emoticon"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_sad"
+        android:tint="@color/gray_semi_transparent_88"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/detail_image_view_neutral"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>
