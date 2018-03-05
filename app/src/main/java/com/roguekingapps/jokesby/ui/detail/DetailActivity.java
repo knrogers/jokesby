@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
@@ -11,6 +12,7 @@ import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.roguekingapps.jokesby.JokesbyApplication;
@@ -52,6 +54,10 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
             joke = intent.getParcelableExtra(getString(R.string.joke));
         }
 
+        setUpViews(binding);
+    }
+
+    private void setUpViews(final ActivityDetailBinding binding) {
         if (joke != null) {
             presenter.query(joke.getId());
             binding.detailTextViewTitle.setTypeface(robotoMedium);
@@ -65,7 +71,33 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
                     "<a href=\"" + joke.getUrl() + "\">/u/" + joke.getUser() + "</a>");
             binding.detailTextViewSubmittedBy.setText(submittedBy);
             binding.detailTextViewSubmittedBy.setMovementMethod(LinkMovementMethod.getInstance());
+
+            binding.detailFabShare.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                    sharingIntent.setType("text/plain");
+                    String text = joke.getTitle()
+                            + "\n\n" + joke.getBody()
+                            + getString(R.string.shared_via_jokesby);
+                    sharingIntent.putExtra(Intent.EXTRA_TEXT, text);
+                    startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_via)));
+                }
+            });
         }
+
+        binding.detailScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                int titleViewHeight = binding.detailTextViewTitle.getMeasuredHeight();
+                float alpha = 1f - (scrollY / (titleViewHeight * 0.75f));
+
+                if (alpha <= 1) {
+                    binding.detailFabShare.setAlpha(alpha);
+                }
+
+            }
+        });
     }
 
     @SuppressWarnings("deprecation")

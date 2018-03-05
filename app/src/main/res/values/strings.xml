@@ -15,4 +15,6 @@
     <string name="list_fragment_tag">listFragmentTag</string>
     <string name="joke_list_fragment_tag">jokeListFragment</string>
     <string name="submitted_by">Submitted by&#xA0;</string>
+    <string name="share_via">Share via</string>
+    <string name="shared_via_jokesby">\n\nShared via Jokesby</string>
 </resources>
