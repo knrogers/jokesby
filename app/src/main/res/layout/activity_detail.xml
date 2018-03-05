@@ -49,7 +49,7 @@
                     android:paddingEnd="@dimen/detail_text_view_body_padding_horizontal"
                     android:paddingBottom="@dimen/detail_text_view_body_padding_bottom"
                     android:textSize="@dimen/detail_text_view_body_text_size"
-                    tools:text="joke title" />
+                    tools:text="joke body" />
 
                 <TextView
                     android:id="@+id/detail_text_view_submitted_by"
@@ -63,6 +63,7 @@
                     android:gravity="end"
                     tools:text="Submitted by /u/username"/>
 
+                <include layout="@layout/layout_rating_bar" />
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
 
