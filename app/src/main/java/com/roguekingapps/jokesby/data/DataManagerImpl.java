@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.roguekingapps.jokesby.R;
 import com.roguekingapps.jokesby.data.database.DatabaseHelper;
-import com.roguekingapps.jokesby.data.database.JokeContract.JokeEntry;
+import com.roguekingapps.jokesby.data.database.JokeContract;
 import com.roguekingapps.jokesby.data.network.ApiHelper;
 import com.roguekingapps.jokesby.data.network.model.Joke;
 import com.roguekingapps.jokesby.data.network.model.JokeContainer;
@@ -23,8 +23,11 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Communicates between the data helper classes, i.e {@link ApiHelper}, and the presenters.
@@ -59,46 +62,11 @@ public class DataManagerImpl implements DataManager {
                 }
             }
         };
-        apiHelper.loadJokes(jokeConsumer);
-    }
 
-    @Override
-    public void loadFromFavourites(final MainPresenter presenter) {
-        Observer<Cursor> queryAllFavouritesObserver = new Observer<Cursor>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(Cursor cursor) {
-                List<Joke> jokes = new ArrayList<>();
-                cursor.moveToPosition(-1);
-                while (cursor.moveToNext()) {
-                    String apiId = cursor.getString(cursor.getColumnIndex(JokeEntry.COLUMN_API_ID));
-                    String title = cursor.getString(cursor.getColumnIndex(JokeEntry.COLUMN_TITLE));
-                    String body = cursor.getString(cursor.getColumnIndex(JokeEntry.COLUMN_BODY));
-                    String user = cursor.getString(cursor.getColumnIndex(JokeEntry.COLUMN_USER));
-                    String url = cursor.getString(cursor.getColumnIndex(JokeEntry.COLUMN_URL));
-                    Joke joke = new Joke(apiId, title, body, user, url);
-                    jokes.add(joke);
-                }
-                cursor.close();
-                presenter.showJokes(jokes);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, e.getMessage(), e);
-                presenter.showError(context.getResources().getString(R.string.error_query_favourite));
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        };
-        databaseHelper.queryAll(queryAllFavouritesObserver);
+        presenter.addDisposable(apiHelper.getJokeContainerObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(jokeConsumer));
     }
 
     private List<Joke> getFilteredJokes(List<Joke> jokes) {
@@ -123,6 +91,44 @@ public class DataManagerImpl implements DataManager {
             result = Html.fromHtml(html.replace("\n","<br />")).toString();
         }
         return result;
+    }
+
+
+    @Override
+    public void loadFromFavourites(final MainPresenter presenter) {
+        DisposableObserver<Cursor> queryAllFavouritesObserver = new DisposableObserver<Cursor>() {
+            @Override
+            public void onNext(Cursor cursor) {
+                List<Joke> jokes = new ArrayList<>();
+                cursor.moveToPosition(-1);
+                while (cursor.moveToNext()) {
+                    String apiId = cursor.getString(cursor.getColumnIndex(JokeContract.JokeEntry.COLUMN_API_ID));
+                    String title = cursor.getString(cursor.getColumnIndex(JokeContract.JokeEntry.COLUMN_TITLE));
+                    String body = cursor.getString(cursor.getColumnIndex(JokeContract.JokeEntry.COLUMN_BODY));
+                    String user = cursor.getString(cursor.getColumnIndex(JokeContract.JokeEntry.COLUMN_USER));
+                    String url = cursor.getString(cursor.getColumnIndex(JokeContract.JokeEntry.COLUMN_URL));
+                    Joke joke = new Joke(apiId, title, body, user, url);
+                    jokes.add(joke);
+                }
+                cursor.close();
+                presenter.showJokes(jokes);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, e.getMessage(), e);
+                presenter.showError(context.getResources().getString(R.string.error_query_favourite));
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
+        presenter.addDisposable(databaseHelper.getQueryAllFavouritesObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(queryAllFavouritesObserver));
     }
 
     @Override
