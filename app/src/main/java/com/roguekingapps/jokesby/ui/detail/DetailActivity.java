@@ -94,8 +94,14 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
 
                 if (alpha <= 1) {
                     binding.detailFabShare.setAlpha(alpha);
+                    if (alpha >= 0 && !binding.detailFabShare.isClickable()) {
+                        binding.detailFabShare.setClickable(true);
+                        binding.detailFabShare.setFocusable(true);
+                    } else {
+                        binding.detailFabShare.setClickable(false);
+                        binding.detailFabShare.setFocusable(false);
+                    }
                 }
-
             }
         });
     }
