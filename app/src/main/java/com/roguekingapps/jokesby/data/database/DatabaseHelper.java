@@ -11,11 +11,11 @@ import io.reactivex.functions.Consumer;
 
 public interface DatabaseHelper {
 
-    void query(Observer<Cursor> queryFavouriteObserver, String apiId);
+    Observable<Cursor> getQueryObservable(String apiId);
 
     Observable<Cursor> getQueryAllFavouritesObservable();
 
-    void deleteJoke(Consumer<Integer> deleteFavouriteConsumer, String apiId);
+    Observable<Integer> getDeleteObservable(String apiId);
 
-    void insertJoke(Observer<Uri> insertFavouriteObserver, Joke joke);
+    Observable<Uri> getInsertObservable(Joke joke);
 }

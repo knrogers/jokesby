@@ -22,9 +22,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -125,6 +123,7 @@ public class DataManagerImpl implements DataManager {
 
             }
         };
+
         presenter.addDisposable(databaseHelper.getQueryAllFavouritesObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -133,12 +132,7 @@ public class DataManagerImpl implements DataManager {
 
     @Override
     public void query(final DetailPresenter presenter, String apiId) {
-        Observer<Cursor> queryFavouritesObserver = new Observer<Cursor>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
+        DisposableObserver<Cursor> queryFavouriteObserver = new DisposableObserver<Cursor>() {
             @Override
             public void onNext(Cursor cursor) {
                 presenter.updateFavouriteIcon(cursor.getCount() >= 1);
@@ -156,7 +150,11 @@ public class DataManagerImpl implements DataManager {
 
             }
         };
-        databaseHelper.query(queryFavouritesObserver, apiId);
+
+        presenter.addDisposable(databaseHelper.getQueryObservable(apiId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(queryFavouriteObserver));
     }
 
     @Override
@@ -171,16 +169,15 @@ public class DataManagerImpl implements DataManager {
                 presenter.updateFavouriteIcon(false);
             }
         };
-        databaseHelper.deleteJoke(deleteFavouriteConsumer, joke.getId());
+
+        presenter.addDisposable(databaseHelper.getDeleteObservable(joke.getId())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(deleteFavouriteConsumer));
     }
 
     private void insertJoke(final DetailPresenter presenter, final Joke joke) {
-        Observer<Uri> insertFavouriteObserver = new Observer<Uri>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
+        DisposableObserver<Uri> insertFavouriteObserver = new DisposableObserver<Uri>() {
             @Override
             public void onNext(Uri uri) {
                 presenter.updateFavouriteIcon(uri != null);
@@ -197,6 +194,10 @@ public class DataManagerImpl implements DataManager {
 
             }
         };
-        databaseHelper.insertJoke(insertFavouriteObserver, joke);
+
+        presenter.addDisposable(databaseHelper.getInsertObservable(joke)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(insertFavouriteObserver));
     }
 }

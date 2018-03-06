@@ -16,10 +16,6 @@ import javax.inject.Singleton;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Accesses the favourites database to process CRUD operations.
@@ -35,8 +31,8 @@ public class DatabaseHelperImpl implements DatabaseHelper {
     }
 
     @Override
-    public void query(Observer<Cursor> queryFavouriteObserver, final String apiId) {
-        Observable<Cursor> observable = Observable.create(new ObservableOnSubscribe<Cursor>() {
+    public Observable<Cursor> getQueryObservable(final String apiId) {
+        return Observable.create(new ObservableOnSubscribe<Cursor>() {
             @Override
             public void subscribe(ObservableEmitter<Cursor> emitter) throws Exception {
                 Cursor cursor = context.getContentResolver().query(
@@ -51,9 +47,6 @@ public class DatabaseHelperImpl implements DatabaseHelper {
                 cursor.close();
             }
         });
-        observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(queryFavouriteObserver);
     }
 
     @Override
@@ -73,19 +66,15 @@ public class DatabaseHelperImpl implements DatabaseHelper {
     }
 
     @Override
-    public void deleteJoke(Consumer<Integer> deleteFavouriteConsumer, String apiId) {
-        Observable<Integer> observable =
-                Observable.just(context.getContentResolver().delete(
+    public Observable<Integer> getDeleteObservable(String apiId) {
+        return Observable.just(context.getContentResolver().delete(
                         JokeEntry.CONTENT_URI,
                         JokeEntry.COLUMN_API_ID,
                         new String[]{apiId}));
-        observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(deleteFavouriteConsumer);
     }
 
     @Override
-    public void insertJoke(Observer<Uri> insertFavouriteObserver, Joke joke) {
+    public Observable<Uri> getInsertObservable(Joke joke) {
         final ContentValues contentValues = new ContentValues();
         contentValues.put(JokeEntry.COLUMN_API_ID, joke.getId());
         contentValues.put(JokeEntry.COLUMN_TITLE, joke.getTitle());
@@ -93,7 +82,7 @@ public class DatabaseHelperImpl implements DatabaseHelper {
         contentValues.put(JokeEntry.COLUMN_USER, joke.getUser());
         contentValues.put(JokeEntry.COLUMN_URL, joke.getUrl());
 
-        Observable<Uri> observable = Observable.create(new ObservableOnSubscribe<Uri>() {
+        return Observable.create(new ObservableOnSubscribe<Uri>() {
             @Override
             public void subscribe(ObservableEmitter<Uri> emitter) throws Exception {
                 Uri uri = context.getContentResolver().insert(JokeEntry.CONTENT_URI, contentValues);
@@ -104,8 +93,5 @@ public class DatabaseHelperImpl implements DatabaseHelper {
                 emitter.onNext(uri);
             }
         });
-        observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(insertFavouriteObserver);
     }
 }
