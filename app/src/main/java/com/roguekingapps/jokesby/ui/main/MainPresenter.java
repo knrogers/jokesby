@@ -4,6 +4,8 @@ import com.roguekingapps.jokesby.data.network.model.Joke;
 
 import java.util.List;
 
+import io.reactivex.disposables.Disposable;
+
 public interface MainPresenter {
 
     void loadFromApi();
@@ -13,4 +15,8 @@ public interface MainPresenter {
     void showJokes(List<Joke> jokes);
 
     void showError(String message);
+
+    void addDisposable(Disposable disposable);
+
+    void clearDisposables();
 }

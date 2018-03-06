@@ -8,6 +8,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+
 /**
  * Communicates with the View and Model to load and display jokes.
  */
@@ -16,11 +19,15 @@ public class MainPresenterImpl implements MainPresenter {
 
     private DataManager dataManager;
     private MainView mainView;
+    private CompositeDisposable disposables;
 
     @Inject
-    MainPresenterImpl(DataManager dataManager, MainView mainView) {
+    MainPresenterImpl(DataManager dataManager,
+                      MainView mainView,
+                      CompositeDisposable disposables) {
         this.dataManager = dataManager;
         this.mainView = mainView;
+        this.disposables = disposables;
     }
 
     @Override
@@ -41,5 +48,15 @@ public class MainPresenterImpl implements MainPresenter {
     @Override
     public void showError(String message) {
         mainView.showError(message);
+    }
+
+    @Override
+    public void addDisposable(Disposable disposable) {
+        disposables.add(disposable);
+    }
+
+    @Override
+    public void clearDisposables() {
+        disposables.clear();
     }
 }
