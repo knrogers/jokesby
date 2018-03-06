@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.UriMatcher;
 
 import com.roguekingapps.jokesby.data.database.JokeContract;
+import com.roguekingapps.jokesby.di.DatabaseVersion;
 import com.roguekingapps.jokesby.di.Favourites;
 
 import javax.inject.Singleton;
@@ -37,5 +38,16 @@ public class DatabaseModule {
     @Favourites
     int provideFavourites() {
         return 100;
+    }
+    
+    @Provides
+    String provideDatabaseName() {
+        return "jokesby.db";
+    }
+
+    @Provides
+    @DatabaseVersion
+    int provideDatabaseVersion() {
+        return 1;
     }
 }
