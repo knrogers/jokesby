@@ -57,8 +57,8 @@ public class DatabaseHelperImpl implements DatabaseHelper {
     }
 
     @Override
-    public void queryAll(Observer<Cursor> queryAllFavouritesObserver) {
-        Observable<Cursor> observable = Observable.create(new ObservableOnSubscribe<Cursor>() {
+    public Observable<Cursor> getQueryAllFavouritesObservable() {
+        return Observable.create(new ObservableOnSubscribe<Cursor>() {
             @Override
             public void subscribe(ObservableEmitter<Cursor> emitter) throws Exception {
                 Cursor cursor = context.getContentResolver()
@@ -70,9 +70,6 @@ public class DatabaseHelperImpl implements DatabaseHelper {
                 emitter.onNext(cursor);
             }
         });
-        observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(queryAllFavouritesObserver);
     }
 
     @Override

@@ -6,9 +6,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Accesses the API and loads jokes.
@@ -24,10 +21,7 @@ public class ApiHelperImpl implements ApiHelper {
     }
 
     @Override
-    public void loadJokes(Consumer<JokeContainer> jokeConsumer) {
-        Observable<JokeContainer> observable = jokeApi.loadJokes("11d", "12d");
-        observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(jokeConsumer);
+    public Observable<JokeContainer> getJokeContainerObservable() {
+        return jokeApi.loadJokes("11d", "12d");
     }
 }

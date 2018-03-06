@@ -5,6 +5,7 @@ import android.net.Uri;
 
 import com.roguekingapps.jokesby.data.network.model.Joke;
 
+import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.functions.Consumer;
 
@@ -12,7 +13,7 @@ public interface DatabaseHelper {
 
     void query(Observer<Cursor> queryFavouriteObserver, String apiId);
 
-    void queryAll(Observer<Cursor> queryAllFavouritesObserver);
+    Observable<Cursor> getQueryAllFavouritesObservable();
 
     void deleteJoke(Consumer<Integer> deleteFavouriteConsumer, String apiId);
 

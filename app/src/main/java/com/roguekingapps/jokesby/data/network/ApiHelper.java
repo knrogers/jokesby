@@ -2,9 +2,9 @@ package com.roguekingapps.jokesby.data.network;
 
 import com.roguekingapps.jokesby.data.network.model.JokeContainer;
 
-import io.reactivex.functions.Consumer;
+import io.reactivex.Observable;
 
 public interface ApiHelper {
 
-    void loadJokes(Consumer<JokeContainer> jokeConsumer);
+    Observable<JokeContainer> getJokeContainerObservable();
 }
