@@ -82,6 +82,12 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.clearDisposables();
+    }
+
+    @Override
     public void loadJokes() {
         if (listFragmentTag.equals(getString(R.string.random))) {
             presenter.loadFromApi();
