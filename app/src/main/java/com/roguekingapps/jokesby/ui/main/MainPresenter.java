@@ -1,22 +1,15 @@
 package com.roguekingapps.jokesby.ui.main;
 
 import com.roguekingapps.jokesby.data.network.model.Joke;
+import com.roguekingapps.jokesby.ui.common.BasePresenter;
 
 import java.util.List;
 
-import io.reactivex.disposables.Disposable;
-
-public interface MainPresenter {
+public interface MainPresenter extends BasePresenter {
 
     void loadFromApi();
 
     void loadFromFavourites();
 
     void showJokes(List<Joke> jokes);
-
-    void showError(String message);
-
-    void addDisposable(Disposable disposable);
-
-    void clearDisposables();
 }

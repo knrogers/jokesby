@@ -1,14 +1,13 @@
 package com.roguekingapps.jokesby.ui.detail;
 
 import com.roguekingapps.jokesby.data.network.model.Joke;
+import com.roguekingapps.jokesby.ui.common.BasePresenter;
 
-public interface DetailPresenter {
+public interface DetailPresenter extends BasePresenter {
 
     void query(String apiId);
 
     void update(Joke joke);
 
     void updateFavouriteIcon(boolean favourite);
-
-    void showError(String message);
 }
