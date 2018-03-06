@@ -170,6 +170,12 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.clearDisposables();
+    }
+
+    @Override
     public void showError(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
