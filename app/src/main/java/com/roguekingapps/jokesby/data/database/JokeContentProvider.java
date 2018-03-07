@@ -12,7 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.roguekingapps.jokesby.R;
-import com.roguekingapps.jokesby.data.database.JokeContract.JokeEntry;
+import com.roguekingapps.jokesby.data.database.JokeContract.FavouriteEntry;
 import com.roguekingapps.jokesby.di.Favourites;
 import com.roguekingapps.jokesby.di.component.DaggerDatabaseComponent;
 import com.roguekingapps.jokesby.di.component.DatabaseComponent;
@@ -32,7 +32,7 @@ public class JokeContentProvider extends ContentProvider {
     UriMatcher uriMatcher;
 
     @Inject
-    DatabaseOpenHelper databaseOpenHelper;
+    FavouritesOpenHelper favouritesOpenHelper;
 
     @Inject
     @Favourites
@@ -56,8 +56,8 @@ public class JokeContentProvider extends ContentProvider {
         int match = uriMatcher.match(uri);
         Cursor cursor;
         if (match == favourites) {
-            cursor = databaseOpenHelper.getReadableDatabase().query(
-                    JokeEntry.TABLE_NAME,
+            cursor = favouritesOpenHelper.getReadableDatabase().query(
+                    FavouriteEntry.TABLE_NAME,
                     projection,
                     selection,
                     selectionArgs,
@@ -84,11 +84,11 @@ public class JokeContentProvider extends ContentProvider {
         int match = uriMatcher.match(uri);
         Uri responseUri;
         if (match == favourites) {
-            long id = databaseOpenHelper.getWritableDatabase()
-                    .insert(JokeEntry.TABLE_NAME, null, contentValues);
+            long id = favouritesOpenHelper.getWritableDatabase()
+                    .insert(FavouriteEntry.TABLE_NAME, null, contentValues);
 
             if (id > 0) {
-                responseUri = ContentUris.withAppendedId(JokeEntry.CONTENT_URI, id);
+                responseUri = ContentUris.withAppendedId(FavouriteEntry.CONTENT_URI, id);
             } else {
                 throw new SQLException(context.getString(R.string.insert_row_failed) + uri);
             }
@@ -110,8 +110,8 @@ public class JokeContentProvider extends ContentProvider {
         int match = uriMatcher.match(uri);
         int rowsDeleted;
         if (match == favourites) {
-            rowsDeleted = databaseOpenHelper.getReadableDatabase().delete(
-                    JokeEntry.TABLE_NAME,
+            rowsDeleted = favouritesOpenHelper.getReadableDatabase().delete(
+                    FavouriteEntry.TABLE_NAME,
                     selection + context.getString(R.string.parameter_placeholder),
                     selectionArgs);
         } else {

@@ -16,7 +16,7 @@ public final class JokeContract  {
 
     }
 
-    public static final class JokeEntry implements BaseColumns {
+    public static final class FavouriteEntry implements BaseColumns {
         static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_FAVOURITES).build();
         static final String TABLE_NAME = "favourites";
         public static final String COLUMN_API_ID = "api_id";

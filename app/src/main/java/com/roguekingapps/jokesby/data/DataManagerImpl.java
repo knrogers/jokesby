@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.roguekingapps.jokesby.R;
 import com.roguekingapps.jokesby.data.database.DatabaseHelper;
-import com.roguekingapps.jokesby.data.database.JokeContract;
+import com.roguekingapps.jokesby.data.database.JokeContract.FavouriteEntry;
 import com.roguekingapps.jokesby.data.network.ApiHelper;
 import com.roguekingapps.jokesby.data.network.model.Joke;
 import com.roguekingapps.jokesby.data.network.model.JokeContainer;
@@ -100,11 +100,11 @@ public class DataManagerImpl implements DataManager {
                 List<Joke> jokes = new ArrayList<>();
                 cursor.moveToPosition(-1);
                 while (cursor.moveToNext()) {
-                    String apiId = cursor.getString(cursor.getColumnIndex(JokeContract.JokeEntry.COLUMN_API_ID));
-                    String title = cursor.getString(cursor.getColumnIndex(JokeContract.JokeEntry.COLUMN_TITLE));
-                    String body = cursor.getString(cursor.getColumnIndex(JokeContract.JokeEntry.COLUMN_BODY));
-                    String user = cursor.getString(cursor.getColumnIndex(JokeContract.JokeEntry.COLUMN_USER));
-                    String url = cursor.getString(cursor.getColumnIndex(JokeContract.JokeEntry.COLUMN_URL));
+                    String apiId = cursor.getString(cursor.getColumnIndex(FavouriteEntry.COLUMN_API_ID));
+                    String title = cursor.getString(cursor.getColumnIndex(FavouriteEntry.COLUMN_TITLE));
+                    String body = cursor.getString(cursor.getColumnIndex(FavouriteEntry.COLUMN_BODY));
+                    String user = cursor.getString(cursor.getColumnIndex(FavouriteEntry.COLUMN_USER));
+                    String url = cursor.getString(cursor.getColumnIndex(FavouriteEntry.COLUMN_URL));
                     Joke joke = new Joke(apiId, title, body, user, url);
                     jokes.add(joke);
                 }
