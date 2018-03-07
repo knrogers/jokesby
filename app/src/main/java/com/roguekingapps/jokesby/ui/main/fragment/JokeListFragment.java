@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.roguekingapps.jokesby.JokesbyApplication;
 import com.roguekingapps.jokesby.R;
-import com.roguekingapps.jokesby.data.network.model.Joke;
+import com.roguekingapps.jokesby.data.model.Joke;
 import com.roguekingapps.jokesby.databinding.FragmentListJokeBinding;
 import com.roguekingapps.jokesby.di.component.DaggerJokeListFragmentComponent;
 import com.roguekingapps.jokesby.di.component.JokeListFragmentComponent;

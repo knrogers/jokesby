@@ -1,4 +1,4 @@
-package com.roguekingapps.jokesby.data.network.model;
+package com.roguekingapps.jokesby.data.model;
 
 import com.google.gson.annotations.SerializedName;
 

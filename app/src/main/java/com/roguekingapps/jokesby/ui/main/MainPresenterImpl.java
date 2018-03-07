@@ -1,7 +1,7 @@
 package com.roguekingapps.jokesby.ui.main;
 
 import com.roguekingapps.jokesby.data.DataManager;
-import com.roguekingapps.jokesby.data.network.model.Joke;
+import com.roguekingapps.jokesby.data.model.Joke;
 import com.roguekingapps.jokesby.di.PerActivity;
 
 import java.util.List;

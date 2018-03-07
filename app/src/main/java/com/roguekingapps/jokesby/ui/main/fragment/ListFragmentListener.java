@@ -1,6 +1,6 @@
 package com.roguekingapps.jokesby.ui.main.fragment;
 
-import com.roguekingapps.jokesby.data.network.model.Joke;
+import com.roguekingapps.jokesby.data.model.Joke;
 
 public interface ListFragmentListener {
 

@@ -1,4 +1,4 @@
-package com.roguekingapps.jokesby.data.network.model;
+package com.roguekingapps.jokesby.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

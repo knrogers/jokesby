@@ -7,7 +7,7 @@ import android.net.Uri;
 
 import com.roguekingapps.jokesby.R;
 import com.roguekingapps.jokesby.data.database.JokeContract.FavouriteEntry;
-import com.roguekingapps.jokesby.data.network.model.Joke;
+import com.roguekingapps.jokesby.data.model.Joke;
 import com.roguekingapps.jokesby.di.ApplicationContext;
 
 import javax.inject.Inject;

@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.roguekingapps.jokesby.data.network.model.Joke;
+import com.roguekingapps.jokesby.data.model.Joke;
 import com.roguekingapps.jokesby.databinding.LayoutListItemJokeBinding;
 import com.roguekingapps.jokesby.databinding.LayoutListItemProgressBarBinding;
 import com.roguekingapps.jokesby.di.PerActivity;

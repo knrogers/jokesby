@@ -1,6 +1,6 @@
 package com.roguekingapps.jokesby.ui.main;
 
-import com.roguekingapps.jokesby.data.network.model.Joke;
+import com.roguekingapps.jokesby.data.model.Joke;
 
 import java.util.List;
 

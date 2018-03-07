@@ -1,7 +1,7 @@
 package com.roguekingapps.jokesby.ui.detail;
 
 import com.roguekingapps.jokesby.data.DataManager;
-import com.roguekingapps.jokesby.data.network.model.Joke;
+import com.roguekingapps.jokesby.data.model.Joke;
 import com.roguekingapps.jokesby.di.PerActivity;
 
 import javax.inject.Inject;

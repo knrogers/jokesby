@@ -1,6 +1,6 @@
 package com.roguekingapps.jokesby.data.network;
 
-import com.roguekingapps.jokesby.data.network.model.JokeContainer;
+import com.roguekingapps.jokesby.data.model.JokeContainer;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
