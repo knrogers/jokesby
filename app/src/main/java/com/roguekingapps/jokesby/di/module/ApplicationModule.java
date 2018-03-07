@@ -8,7 +8,6 @@ import com.roguekingapps.jokesby.data.DataManager;
 import com.roguekingapps.jokesby.data.DataManagerImpl;
 import com.roguekingapps.jokesby.data.database.DatabaseHelper;
 import com.roguekingapps.jokesby.data.database.DatabaseHelperImpl;
-import com.roguekingapps.jokesby.data.database.DatabaseOpenHelper;
 import com.roguekingapps.jokesby.data.network.ApiHelper;
 import com.roguekingapps.jokesby.data.network.ApiHelperImpl;
 import com.roguekingapps.jokesby.di.ApplicationContext;
