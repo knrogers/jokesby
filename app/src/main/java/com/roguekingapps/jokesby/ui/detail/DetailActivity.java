@@ -160,9 +160,9 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     @Override
     public void updateFavouriteIcon(boolean favourite) {
         if (favourite) {
-            updateFavouriteIcon(R.drawable.ic_favorite_black);
+            updateFavouriteIcon(R.drawable.ic_favourite_black);
         } else {
-            updateFavouriteIcon(R.drawable.ic_favorite_border_black);
+            updateFavouriteIcon(R.drawable.ic_favourite_border_black);
         }
     }
 
