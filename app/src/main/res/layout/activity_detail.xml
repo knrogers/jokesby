@@ -9,7 +9,7 @@
         android:layout_height="match_parent">
 
         <include
-            android:id="@+id/layout_app_bar"
+            android:id="@+id/detail_app_bar"
             layout="@layout/layout_app_bar" />
 
         <android.support.v4.widget.NestedScrollView
@@ -22,32 +22,32 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/detail_padding_bottom"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/detail_padding_bottom">
 
                 <TextView
                     android:id="@+id/detail_text_view_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/detail_text_view_title_padding"
-                    android:paddingStart="@dimen/detail_text_view_title_padding"
-                    android:paddingEnd="@dimen/detail_text_view_title_padding"
-                    android:paddingBottom="@dimen/detail_text_view_title_padding_bottom"
                     android:background="@color/accent"
+                    android:paddingBottom="@dimen/detail_text_view_title_padding_bottom"
+                    android:paddingEnd="@dimen/detail_text_view_title_padding"
+                    android:paddingStart="@dimen/detail_text_view_title_padding"
+                    android:paddingTop="@dimen/detail_text_view_title_padding"
                     android:textAlignment="center"
-                    android:textSize="@dimen/detail_text_view_title_text_size"
-                    android:textColor="@color/white"
                     android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/detail_text_view_title_text_size"
                     tools:text="joke title" />
 
                 <TextView
                     android:id="@+id/detail_text_view_body"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/detail_text_view_body_padding_top"
-                    android:paddingStart="@dimen/detail_text_view_body_padding_horizontal"
-                    android:paddingEnd="@dimen/detail_text_view_body_padding_horizontal"
                     android:paddingBottom="@dimen/detail_text_view_body_padding_bottom"
+                    android:paddingEnd="@dimen/detail_text_view_body_padding_horizontal"
+                    android:paddingStart="@dimen/detail_text_view_body_padding_horizontal"
+                    android:paddingTop="@dimen/detail_text_view_body_padding_top"
                     android:textSize="@dimen/detail_text_view_body_text_size"
                     tools:text="joke body" />
 
@@ -55,15 +55,18 @@
                     android:id="@+id/detail_text_view_submitted_by"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/detail_text_view_submitted_by_padding_top"
-                    android:paddingStart="@dimen/detail_text_view_submitted_by_padding_horizontal"
-                    android:paddingEnd="@dimen/detail_text_view_submitted_by_padding_horizontal"
-                    android:textSize="@dimen/detail_text_view_submitted_by_text_size"
                     android:layout_gravity="end"
                     android:gravity="end"
-                    tools:text="Submitted by /u/username"/>
+                    android:paddingEnd="@dimen/detail_text_view_submitted_by_padding_horizontal"
+                    android:paddingStart="@dimen/detail_text_view_submitted_by_padding_horizontal"
+                    android:paddingTop="@dimen/detail_text_view_submitted_by_padding_top"
+                    android:textSize="@dimen/detail_text_view_submitted_by_text_size"
+                    tools:text="Submitted by /u/username" />
 
-                <include layout="@layout/layout_rating_bar" />
+                <include
+                    android:id="@+id/detail_rating_bar"
+                    layout="@layout/layout_rating_bar" />
+
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
 
@@ -75,11 +78,18 @@
             android:scaleType="center"
             android:src="@drawable/ic_share_black"
             android:tint="@color/white"
+            app:backgroundTint="@color/primary"
             app:elevation="@dimen/detail_fab_share_elevation"
             app:fabSize="normal"
-            app:backgroundTint="@color/primary"
             app:layout_anchor="@id/detail_text_view_title"
-            app:layout_anchorGravity="end|bottom"/>
+            app:layout_anchorGravity="end|bottom" />
+
+        <ProgressBar
+            android:id="@+id/detail_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>
