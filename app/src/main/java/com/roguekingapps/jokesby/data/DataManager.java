@@ -10,7 +10,11 @@ public interface DataManager {
 
     void loadFromFavourites(MainPresenter mainPresenter);
 
-    void query(DetailPresenter detailPresenter, String apiId);
+    void queryFavourite(DetailPresenter detailPresenter, String apiId);
 
-    void updateJoke(DetailPresenter detailPresenter, Joke joke);
+    void updateFavourite(DetailPresenter detailPresenter, Joke joke);
+
+    void queryRated(DetailPresenter detailPresenter, String apiId);
+
+    void updateRated(DetailPresenter detailPresenter, Joke joke);
 }

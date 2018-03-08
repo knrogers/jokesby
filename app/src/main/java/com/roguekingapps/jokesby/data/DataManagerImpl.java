@@ -9,6 +9,7 @@ import android.util.Log;
 import com.roguekingapps.jokesby.R;
 import com.roguekingapps.jokesby.data.database.DatabaseHelper;
 import com.roguekingapps.jokesby.data.database.JokeContract.FavouriteEntry;
+import com.roguekingapps.jokesby.data.database.JokeContract.RatedEntry;
 import com.roguekingapps.jokesby.data.network.ApiHelper;
 import com.roguekingapps.jokesby.data.model.Joke;
 import com.roguekingapps.jokesby.data.model.JokeContainer;
@@ -22,6 +23,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableObserver;
@@ -131,10 +133,17 @@ public class DataManagerImpl implements DataManager {
     }
 
     @Override
-    public void query(final DetailPresenter presenter, String apiId) {
+    public void queryFavourite(final DetailPresenter presenter, String apiId) {
         DisposableObserver<Cursor> queryFavouriteObserver = new DisposableObserver<Cursor>() {
             @Override
+            protected void onStart() {
+                super.onStart();
+                presenter.onStartLoad();
+            }
+
+            @Override
             public void onNext(Cursor cursor) {
+                presenter.onPostLoad();
                 presenter.updateFavouriteIcon(cursor.getCount() >= 1);
                 cursor.close();
             }
@@ -151,19 +160,22 @@ public class DataManagerImpl implements DataManager {
             }
         };
 
-        presenter.addDisposable(databaseHelper.getQueryObservable(apiId)
-                .subscribeOn(Schedulers.io())
+        Observable<Cursor> queryObservable = databaseHelper.getQueryObservable(
+                FavouriteEntry.CONTENT_URI,
+                FavouriteEntry.COLUMN_API_ID,
+                apiId);
+        presenter.addDisposable(queryObservable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(queryFavouriteObserver));
     }
 
     @Override
-    public void updateJoke(final DetailPresenter presenter, final Joke joke) {
+    public void updateFavourite(final DetailPresenter presenter, final Joke joke) {
         Consumer<Integer> deleteFavouriteConsumer = new Consumer<Integer>() {
             @Override
             public void accept(Integer rowsDeleted) throws Exception {
                 if (rowsDeleted == null || rowsDeleted == 0) {
-                    insertJoke(presenter, joke);
+                    insertFavourite(presenter, joke);
                     return;
                 }
                 presenter.updateFavouriteIcon(false);
@@ -176,7 +188,7 @@ public class DataManagerImpl implements DataManager {
                 .subscribe(deleteFavouriteConsumer));
     }
 
-    private void insertJoke(final DetailPresenter presenter, final Joke joke) {
+    private void insertFavourite(final DetailPresenter presenter, final Joke joke) {
         DisposableObserver<Uri> insertFavouriteObserver = new DisposableObserver<Uri>() {
             @Override
             public void onNext(Uri uri) {
@@ -195,9 +207,95 @@ public class DataManagerImpl implements DataManager {
             }
         };
 
-        presenter.addDisposable(databaseHelper.getInsertObservable(joke)
+        presenter.addDisposable(databaseHelper.getInsertFavouriteObservable(joke)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(insertFavouriteObserver));
+    }
+
+    @Override
+    public void queryRated(final DetailPresenter presenter, String apiId) {
+        DisposableObserver<Cursor> queryRatedObserver = new DisposableObserver<Cursor>() {
+            @Override
+            protected void onStart() {
+                super.onStart();
+                presenter.onStartLoad();
+            }
+
+            @Override
+            public void onNext(Cursor cursor) {
+                if (cursor.getCount() > 0) {
+                    cursor.moveToPosition(-1);
+                    cursor.moveToNext();
+                    String rating = cursor.getString(cursor.getColumnIndex(RatedEntry.COLUMN_RATING));
+                    presenter.checkRating(rating);
+                }
+                presenter.onPostLoad();
+                cursor.close();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, e.getMessage(), e);
+                presenter.showError(context.getResources().getString(R.string.error_query_favourite));
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
+
+        Observable<Cursor> queryObservable = databaseHelper.getQueryObservable(
+                RatedEntry.CONTENT_URI,
+                RatedEntry.COLUMN_API_ID,
+                apiId);
+        presenter.addDisposable(queryObservable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(queryRatedObserver));
+    }
+
+    @Override
+    public void updateRated(final DetailPresenter presenter, final Joke joke) {
+        Consumer<Integer> rowsUpdatedConsumer = new Consumer<Integer>() {
+            @Override
+            public void accept(Integer rowsUpdated) throws Exception {
+                if (rowsUpdated == null || rowsUpdated == 0) {
+                    insertRated(presenter, joke);
+                    return;
+                }
+                presenter.checkRating();
+            }
+        };
+
+        presenter.addDisposable(databaseHelper.getUpdateObservable(joke)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(rowsUpdatedConsumer));
+    }
+
+    private void insertRated(final DetailPresenter presenter, final Joke joke) {
+        DisposableObserver<Uri> insertRatedObserver = new DisposableObserver<Uri>() {
+            @Override
+            public void onNext(Uri uri) {
+                presenter.checkRating();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, e.getMessage(), e);
+                presenter.showError(context.getResources().getString(R.string.error_add_favourite));
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
+
+        presenter.addDisposable(databaseHelper.getInsertRatedObservable(joke)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(insertRatedObserver));
     }
 }

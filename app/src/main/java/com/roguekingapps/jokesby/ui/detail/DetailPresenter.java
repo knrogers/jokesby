@@ -5,9 +5,21 @@ import com.roguekingapps.jokesby.ui.common.BasePresenter;
 
 public interface DetailPresenter extends BasePresenter {
 
-    void query(String apiId);
+    void onStartLoad();
 
-    void update(Joke joke);
+    void onPostLoad();
+
+    void queryFavourite(String apiId);
+
+    void updateFavourite(Joke joke);
+
+    void queryRated(String apiId);
+
+    void updateRated(Joke joke);
+
+    void checkRating();
+
+    void checkRating(String rating);
 
     void updateFavouriteIcon(boolean favourite);
 }

@@ -29,13 +29,43 @@ public class DetailPresenterImpl implements DetailPresenter {
     }
 
     @Override
-    public void query(String apiId) {
-        dataManager.query(this, apiId);
+    public void onStartLoad() {
+        detailView.onStartLoad();
     }
 
     @Override
-    public void update(Joke joke) {
-        dataManager.updateJoke(this, joke);
+    public void onPostLoad() {
+        detailView.onPostLoad();
+    }
+
+    @Override
+    public void queryFavourite(String apiId) {
+        dataManager.queryFavourite(this, apiId);
+    }
+
+    @Override
+    public void updateFavourite(Joke joke) {
+        dataManager.updateFavourite(this, joke);
+    }
+
+    @Override
+    public void queryRated(String apiId) {
+        dataManager.queryRated(this, apiId);
+    }
+
+    @Override
+    public void updateRated(Joke joke) {
+        dataManager.updateRated(this, joke);
+    }
+
+    @Override
+    public void checkRating() {
+        detailView.checkRating();
+    }
+
+    @Override
+    public void checkRating(String rating) {
+        detailView.checkRating(rating);
     }
 
     @Override
