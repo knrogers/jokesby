@@ -100,6 +100,9 @@ public class MainActivity extends AppCompatActivity implements
     public void showDetailActivity(Joke joke) {
         Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra(getString(R.string.joke), joke);
+        if (listFragmentTag.equals(getString(R.string.favourites))) {
+            intent.putExtra(getString(R.string.favourite), true);
+        }
         startActivity(intent);
     }
 
