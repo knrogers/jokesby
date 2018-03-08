@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.roguekingapps.jokesby.data.network.JokeApi;
 
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
@@ -24,6 +25,12 @@ public class NetworkModule {
     @Singleton
     JokeApi provideJokeApi() {
         return getRetrofit().create(JokeApi.class);
+    }
+
+    @Provides
+    @Singleton
+    Random provideRandom() {
+        return new Random();
     }
 
     @Singleton
