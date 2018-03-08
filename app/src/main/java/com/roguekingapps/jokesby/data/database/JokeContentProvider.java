@@ -74,6 +74,15 @@ public class JokeContentProvider extends ContentProvider {
                     null,
                     null,
                     sortOrder);
+        } else if (match == rated) {
+            cursor = databaseOpenHelper.getReadableDatabase().query(
+                    RatedEntry.TABLE_NAME,
+                    projection,
+                    selection,
+                    selectionArgs,
+                    null,
+                    null,
+                    sortOrder);
         } else {
             throw new UnsupportedOperationException(context.getString(R.string.unknown_uri) + uri);
         }
