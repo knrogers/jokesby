@@ -1,5 +1,6 @@
 package com.roguekingapps.jokesby.ui.main;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
@@ -103,16 +104,38 @@ public class MainActivity extends AppCompatActivity implements
         if (listFragmentTag.equals(getString(R.string.favourites))) {
             intent.putExtra(getString(R.string.favourite), true);
         }
-        startActivity(intent);
+        startActivityForResult(intent, getResources().getInteger(R.integer.request_code));
     }
 
     @Override
-    public void showJokes(List<Joke> jokes) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // If user clicked on favourites icon in detail screen.
+        if (requestCode == getResources().getInteger(R.integer.request_code)
+                && resultCode == Activity.RESULT_OK) {
+            // Reload master list to refresh view.
+            if (listFragmentTag.equals(getString(R.string.favourites))) {
+                presenter.loadFromFavourites();
+            }
+        }
+    }
+
+    @Override
+    public void showJokesFromApi(List<Joke> jokes) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         JokeListFragment selectedFragment =
                 (JokeListFragment) fragmentManager.findFragmentByTag(listFragmentTag);
         if (selectedFragment != null) {
-            selectedFragment.showJokes(jokes);
+            selectedFragment.showJokesFromApi(jokes);
+        }
+    }
+
+    @Override
+    public void showJokesFromFavourites(List<Joke> jokes) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        JokeListFragment selectedFragment =
+                (JokeListFragment) fragmentManager.findFragmentByTag(listFragmentTag);
+        if (selectedFragment != null) {
+            selectedFragment.showJokesFromFavourites(jokes);
         }
     }
 

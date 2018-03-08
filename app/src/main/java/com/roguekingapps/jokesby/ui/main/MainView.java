@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface MainView {
 
-    void showJokes(List<Joke> jokes);
+    void showJokesFromApi(List<Joke> jokes);
+
+    void showJokesFromFavourites(List<Joke> jokes);
 
     void showError(String message);
 }

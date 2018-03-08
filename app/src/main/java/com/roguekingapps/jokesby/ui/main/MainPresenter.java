@@ -11,5 +11,7 @@ public interface MainPresenter extends BasePresenter {
 
     void loadFromFavourites();
 
-    void showJokes(List<Joke> jokes);
+    void showJokesFromApi(List<Joke> jokes);
+
+    void showJokesFromFavourites(List<Joke> jokes);
 }

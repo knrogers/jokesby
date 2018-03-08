@@ -41,8 +41,13 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
-    public void showJokes(List<Joke> jokes) {
-        mainView.showJokes(jokes);
+    public void showJokesFromApi(List<Joke> jokes) {
+        mainView.showJokesFromApi(jokes);
+    }
+
+    @Override
+    public void showJokesFromFavourites(List<Joke> jokes) {
+        mainView.showJokesFromFavourites(jokes);
     }
 
     @Override
