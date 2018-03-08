@@ -7,6 +7,7 @@ import android.net.Uri;
 
 import com.roguekingapps.jokesby.R;
 import com.roguekingapps.jokesby.data.database.JokeContract.FavouriteEntry;
+import com.roguekingapps.jokesby.data.database.JokeContract.RatedEntry;
 import com.roguekingapps.jokesby.data.model.Joke;
 import com.roguekingapps.jokesby.di.ApplicationContext;
 
@@ -31,20 +32,22 @@ public class DatabaseHelperImpl implements DatabaseHelper {
     }
 
     @Override
-    public Observable<Cursor> getQueryObservable(final String apiId) {
+    public Observable<Cursor> getQueryObservable(
+            final Uri contentUri,
+            final String columnApiId,
+            final String apiId) {
         return Observable.create(new ObservableOnSubscribe<Cursor>() {
             @Override
             public void subscribe(ObservableEmitter<Cursor> emitter) throws Exception {
                 Cursor cursor = context.getContentResolver().query(
-                        FavouriteEntry.CONTENT_URI, null,
-                        FavouriteEntry.COLUMN_API_ID + context.getString(R.string.parameter_placeholder),
+                        contentUri, null,
+                        columnApiId + context.getString(R.string.parameter_placeholder),
                         new String[]{apiId}, null);
                 if (cursor == null) {
                     emitter.onError(new Exception("Cursor returned from query was null."));
                     return;
                 }
                 emitter.onNext(cursor);
-                cursor.close();
             }
         });
     }
@@ -74,7 +77,18 @@ public class DatabaseHelperImpl implements DatabaseHelper {
     }
 
     @Override
-    public Observable<Uri> getInsertObservable(Joke joke) {
+    public Observable<Integer> getUpdateObservable(Joke joke) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(RatedEntry.COLUMN_RATING, joke.getRating());
+        return Observable.just(context.getContentResolver().update(
+                RatedEntry.CONTENT_URI,
+                contentValues,
+                RatedEntry.COLUMN_API_ID,
+                new String[]{joke.getId()}));
+    }
+
+    @Override
+    public Observable<Uri> getInsertFavouriteObservable(Joke joke) {
         final ContentValues contentValues = new ContentValues();
         contentValues.put(FavouriteEntry.COLUMN_API_ID, joke.getId());
         contentValues.put(FavouriteEntry.COLUMN_TITLE, joke.getTitle());
@@ -86,6 +100,29 @@ public class DatabaseHelperImpl implements DatabaseHelper {
             @Override
             public void subscribe(ObservableEmitter<Uri> emitter) throws Exception {
                 Uri uri = context.getContentResolver().insert(FavouriteEntry.CONTENT_URI, contentValues);
+                if (uri == null) {
+                    emitter.onError(new Exception("Uri returned from insert was null."));
+                    return;
+                }
+                emitter.onNext(uri);
+            }
+        });
+    }
+
+    @Override
+    public Observable<Uri> getInsertRatedObservable(Joke joke) {
+        final ContentValues contentValues = new ContentValues();
+        contentValues.put(RatedEntry.COLUMN_API_ID, joke.getId());
+        contentValues.put(RatedEntry.COLUMN_TITLE, joke.getTitle());
+        contentValues.put(RatedEntry.COLUMN_BODY, joke.getBody());
+        contentValues.put(RatedEntry.COLUMN_USER, joke.getUser());
+        contentValues.put(RatedEntry.COLUMN_URL, joke.getUrl());
+        contentValues.put(RatedEntry.COLUMN_RATING, joke.getRating());
+
+        return Observable.create(new ObservableOnSubscribe<Uri>() {
+            @Override
+            public void subscribe(ObservableEmitter<Uri> emitter) throws Exception {
+                Uri uri = context.getContentResolver().insert(RatedEntry.CONTENT_URI, contentValues);
                 if (uri == null) {
                     emitter.onError(new Exception("Uri returned from insert was null."));
                     return;

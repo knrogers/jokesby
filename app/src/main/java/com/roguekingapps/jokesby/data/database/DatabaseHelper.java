@@ -9,11 +9,15 @@ import io.reactivex.Observable;
 
 public interface DatabaseHelper {
 
-    Observable<Cursor> getQueryObservable(String apiId);
+    Observable<Cursor> getQueryObservable(Uri contentUri, String columnApiId, String apiId);
 
     Observable<Cursor> getQueryAllFavouritesObservable();
 
     Observable<Integer> getDeleteObservable(String apiId);
 
-    Observable<Uri> getInsertObservable(Joke joke);
+    Observable<Integer> getUpdateObservable(Joke joke);
+
+    Observable<Uri> getInsertFavouriteObservable(Joke joke);
+
+    Observable<Uri> getInsertRatedObservable(Joke joke);
 }
