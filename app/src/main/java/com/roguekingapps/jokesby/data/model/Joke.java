@@ -17,6 +17,7 @@ public class Joke implements Parcelable {
     private String user;
 
     private String url;
+    private String rating;
 
     public Joke(String id, String title, String body, String user, String url) {
         this.id = id;
@@ -32,6 +33,7 @@ public class Joke implements Parcelable {
         body = in.readString();
         user = in.readString();
         url = in.readString();
+        rating = in.readString();
     }
 
     public static final Creator<Joke> CREATOR = new Creator<Joke>() {
@@ -86,6 +88,14 @@ public class Joke implements Parcelable {
         this.url = url;
     }
 
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -98,5 +108,6 @@ public class Joke implements Parcelable {
         parcel.writeString(body);
         parcel.writeString(user);
         parcel.writeString(url);
+        parcel.writeString(rating);
     }
 }
