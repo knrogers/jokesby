@@ -1,87 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/rating_bar_margin_top"
-    android:orientation="horizontal">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
-        android:id="@+id/detail_image_view_laugh"
-        android:layout_width="@dimen/detail_image_view_width"
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/laugh_emoticon"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_laugh"
-        android:tint="@color/gray_semi_transparent_88"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/detail_image_view_happy"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="@dimen/rating_bar_margin_top">
 
-    <ImageView
-        android:id="@+id/detail_image_view_happy"
-        android:layout_width="@dimen/detail_image_view_width"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/happy_emoticon"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_happy"
-        android:tint="@color/gray_semi_transparent_88"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/detail_image_view_laugh"
-        app:layout_constraintEnd_toStartOf="@id/detail_image_view_tongue_out"
-        app:layout_constraintTop_toTopOf="parent" />
+        <RadioGroup
+            android:id="@+id/rating_bar_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:id="@+id/detail_image_view_tongue_out"
-        android:layout_width="@dimen/detail_image_view_width"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/tongue_out_emoticon"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_tongue_out"
-        android:tint="@color/gray_semi_transparent_88"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/detail_image_view_happy"
-        app:layout_constraintEnd_toStartOf="@id/detail_image_view_surprised"
-        app:layout_constraintTop_toTopOf="parent" />
+            <android.support.v7.widget.AppCompatRadioButton
+                android:id="@+id/rating_bar_button_laugh"
+                android:layout_width="@dimen/rating_bar_button_width"
+                android:layout_height="@dimen/rating_bar_button_height"
+                android:layout_marginEnd="@dimen/rating_bar_margin"
+                android:layout_marginStart="@dimen/rating_bar_margin"
+                android:background="@drawable/ic_laugh"
+                android:button="@null"
+                android:tag="@string/laugh_emoticon" />
 
-    <ImageView
-        android:id="@+id/detail_image_view_surprised"
-        android:layout_width="@dimen/detail_image_view_width"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/surprised_emoticon"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_surprised"
-        android:tint="@color/gray_semi_transparent_88"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/detail_image_view_tongue_out"
-        app:layout_constraintEnd_toStartOf="@id/detail_image_view_neutral"
-        app:layout_constraintTop_toTopOf="parent" />
+            <android.support.v7.widget.AppCompatRadioButton
+                android:id="@+id/rating_bar_button_happy"
+                android:layout_width="@dimen/rating_bar_button_width"
+                android:layout_height="@dimen/rating_bar_button_height"
+                android:layout_marginEnd="@dimen/rating_bar_margin"
+                android:layout_marginStart="@dimen/rating_bar_margin"
+                android:background="@drawable/ic_happy"
+                android:button="@null"
+                android:tag="@string/happy_emoticon" />
 
-    <ImageView
-        android:id="@+id/detail_image_view_neutral"
-        android:layout_width="@dimen/detail_image_view_width"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/neutral_emoticon"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_neutral"
-        android:tint="@color/gray_semi_transparent_88"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/detail_image_view_surprised"
-        app:layout_constraintEnd_toStartOf="@id/detail_image_view_sad"
-        app:layout_constraintTop_toTopOf="parent" />
+            <android.support.v7.widget.AppCompatRadioButton
+                android:id="@+id/rating_bar_button_tongue_out"
+                android:layout_width="@dimen/rating_bar_button_width"
+                android:layout_height="@dimen/rating_bar_button_height"
+                android:layout_marginEnd="@dimen/rating_bar_margin"
+                android:layout_marginStart="@dimen/rating_bar_margin"
+                android:background="@drawable/ic_tongue_out"
+                android:button="@null"
+                android:tag="@string/tongue_out_emoticon" />
 
-    <ImageView
-        android:id="@+id/detail_image_view_sad"
-        android:layout_width="@dimen/detail_image_view_width"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/sad_emoticon"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_sad"
-        android:tint="@color/gray_semi_transparent_88"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/detail_image_view_neutral"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+            <android.support.v7.widget.AppCompatRadioButton
+                android:id="@+id/rating_bar_button_surprised"
+                android:layout_width="@dimen/rating_bar_button_width"
+                android:layout_height="@dimen/rating_bar_button_height"
+                android:layout_marginEnd="@dimen/rating_bar_margin"
+                android:layout_marginStart="@dimen/rating_bar_margin"
+                android:background="@drawable/ic_surprised"
+                android:button="@null"
+                android:tag="@string/surprised_emoticon" />
 
-</android.support.constraint.ConstraintLayout>
+            <android.support.v7.widget.AppCompatRadioButton
+                android:id="@+id/rating_bar_button_neutral"
+                android:layout_width="@dimen/rating_bar_button_width"
+                android:layout_height="@dimen/rating_bar_button_height"
+                android:layout_marginEnd="@dimen/rating_bar_margin"
+                android:layout_marginStart="@dimen/rating_bar_margin"
+                android:background="@drawable/ic_neutral"
+                android:button="@null"
+                android:tag="@string/neutral_emoticon" />
+
+            <android.support.v7.widget.AppCompatRadioButton
+                android:id="@+id/rating_bar_button_sad"
+                android:layout_width="@dimen/rating_bar_button_width"
+                android:layout_height="@dimen/rating_bar_button_height"
+                android:layout_marginEnd="@dimen/rating_bar_margin"
+                android:layout_marginStart="@dimen/rating_bar_margin"
+                android:background="@drawable/ic_sad"
+                android:button="@null"
+                android:tag="@string/sad_emoticon" />
+
+        </RadioGroup>
+    </android.support.constraint.ConstraintLayout>
+</layout>
