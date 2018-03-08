@@ -153,8 +153,24 @@ public class JokeContentProvider extends ContentProvider {
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues,
-                      @Nullable String s, @Nullable String[] strings) {
-        return 0;
+                      @Nullable String selection, @Nullable String[] selectionArgs) {
+        Context context = getContext();
+        if (context == null) {
+            throw new NullPointerException(invalidContextValue);
+        }
+
+        int match = uriMatcher.match(uri);
+        int rowsUpdated;
+        if (match == rated) {
+            rowsUpdated = databaseOpenHelper.getReadableDatabase().update(
+                    RatedEntry.TABLE_NAME,
+                    contentValues,
+                    selection + context.getString(R.string.parameter_placeholder),
+                    selectionArgs);
+        } else {
+            throw new UnsupportedOperationException(context.getString(R.string.unknown_uri) + uri);
+        }
+        return rowsUpdated;
     }
 
     @Nullable
