@@ -69,8 +69,8 @@ public class DetailPresenterImpl implements DetailPresenter {
     }
 
     @Override
-    public void updateFavouriteIcon(boolean favourite) {
-        detailView.updateFavouriteIcon(favourite);
+    public void onPostUpdateFavourite(boolean favourite) {
+        detailView.onPostUpdateFavourite(favourite);
     }
 
     @Override

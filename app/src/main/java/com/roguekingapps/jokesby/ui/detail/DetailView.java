@@ -6,7 +6,7 @@ public interface DetailView {
 
     void onPostLoad();
 
-    void updateFavouriteIcon(boolean favourite);
+    void onPostUpdateFavourite(boolean favourite);
 
     void checkRating();
 

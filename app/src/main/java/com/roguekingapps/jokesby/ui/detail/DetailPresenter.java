@@ -21,5 +21,5 @@ public interface DetailPresenter extends BasePresenter {
 
     void checkRating(String rating);
 
-    void updateFavouriteIcon(boolean favourite);
+    void onPostUpdateFavourite(boolean favourite);
 }

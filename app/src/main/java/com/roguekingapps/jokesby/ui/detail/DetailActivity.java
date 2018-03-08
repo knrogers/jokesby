@@ -1,5 +1,6 @@
 package com.roguekingapps.jokesby.ui.detail;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
@@ -38,6 +39,7 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     private int drawableId = -1;
     private AppCompatRadioButton radioButton;
     private boolean fromFavouriteList;
+    private int updateFavouriteResult = Activity.RESULT_CANCELED;
 
     @Inject
     DetailPresenter presenter;
@@ -78,7 +80,7 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
         if (!fromFavouriteList) {
             presenter.queryFavourite(joke.getId());
         } else {
-            updateFavouriteIcon(true);
+            onPostUpdateFavourite(true);
         }
     }
 
@@ -184,6 +186,20 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(getString(R.string.result_code), updateFavouriteResult);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState.containsKey(getString(R.string.result_code))) {
+            updateFavouriteResult = savedInstanceState.getInt(getString(R.string.result_code));
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.detail_menu, menu);
@@ -241,7 +257,8 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     }
 
     @Override
-    public void updateFavouriteIcon(boolean favourite) {
+    public void onPostUpdateFavourite(boolean favourite) {
+        updateFavouriteResult = Activity.RESULT_OK;
         if (favourite) {
             updateFavouriteIcon(R.drawable.ic_favourite_black);
         } else {
@@ -276,6 +293,12 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
                 break;
             }
         }
+    }
+
+    @Override
+    public void finish() {
+        setResult(updateFavouriteResult);
+        super.finish();
     }
 
     @Override
