@@ -18,7 +18,7 @@ public final class JokeContract  {
     }
 
     public static final class FavouriteEntry implements BaseColumns {
-        static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_FAVOURITES).build();
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_FAVOURITES).build();
         static final String TABLE_NAME = "favourites";
         public static final String COLUMN_API_ID = "api_id";
         public static final String COLUMN_TITLE = "title";
@@ -28,14 +28,14 @@ public final class JokeContract  {
     }
 
     public static final class RatedEntry implements BaseColumns {
-        static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_RATED).build();
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_RATED).build();
         static final String TABLE_NAME = "rated";
-        static final String COLUMN_API_ID = "api_id";
+        public static final String COLUMN_API_ID = "api_id";
         static final String COLUMN_TITLE = "title";
         static final String COLUMN_BODY = "body";
         static final String COLUMN_USER = "user";
         static final String COLUMN_URL = "url";
-        static final String COLUMN_RATING = "rating";
+        public static final String COLUMN_RATING = "rating";
     }
 }
 
