@@ -1,18 +1,22 @@
 package com.roguekingapps.jokesby.ui.detail;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatRadioButton;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.roguekingapps.jokesby.JokesbyApplication;
@@ -28,9 +32,12 @@ import javax.inject.Inject;
 public class DetailActivity extends AppCompatActivity implements DetailView {
 
     private DetailActivityComponent activityComponent;
+    private ActivityDetailBinding binding;
     private Joke joke;
     private Menu menu;
     private int drawableId = -1;
+    private AppCompatRadioButton radioButton;
+    private boolean fromFavouriteList;
 
     @Inject
     DetailPresenter presenter;
@@ -41,51 +48,97 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityDetailBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
         getActivityComponent().inject(this);
 
-        setSupportActionBar(binding.layoutAppBar.toolbar);
+        setSupportActionBar(binding.detailAppBar.toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
         Intent intent = getIntent();
-        if (intent != null && intent.hasExtra(getString(R.string.joke))) {
-            joke = intent.getParcelableExtra(getString(R.string.joke));
+        if (intent != null) {
+            if (intent.hasExtra(getString(R.string.joke))) {
+                joke = intent.getParcelableExtra(getString(R.string.joke));
+            }
+            fromFavouriteList = intent.hasExtra(getString(R.string.favourite));
         }
 
-        setUpViews(binding);
+        if (joke != null) {
+            updateFavourite();
+            updateRating();
+            updateTextViews();
+            setFabOnClickListener();
+            setUpRadioButtons();
+        }
+        setScrollViewListener();
     }
 
-    private void setUpViews(final ActivityDetailBinding binding) {
-        if (joke != null) {
-            presenter.query(joke.getId());
-            binding.detailTextViewTitle.setTypeface(robotoMedium);
-            binding.detailTextViewTitle.setText(joke.getTitle());
+    private void updateFavourite() {
+        if (!fromFavouriteList) {
+            presenter.queryFavourite(joke.getId());
+        } else {
+            updateFavouriteIcon(true);
+        }
+    }
 
-            binding.detailTextViewBody.setTypeface(robotoMedium);
-            binding.detailTextViewBody.setText(joke.getBody());
+    private void updateRating() {
+        if (joke.getRating() == null) {
+            presenter.queryRated(joke.getId());
+        } else {
+            checkRating(joke.getRating());
+        }
+    }
 
-            binding.detailTextViewSubmittedBy.setTypeface(robotoMedium);
-            Spanned submittedBy = fromHtml(getString(R.string.submitted_by) +
-                    "<a href=\"" + joke.getUrl() + "\">/u/" + joke.getUser() + "</a>");
-            binding.detailTextViewSubmittedBy.setText(submittedBy);
-            binding.detailTextViewSubmittedBy.setMovementMethod(LinkMovementMethod.getInstance());
+    private void updateTextViews() {
+        binding.detailTextViewTitle.setTypeface(robotoMedium);
+        binding.detailTextViewTitle.setText(joke.getTitle());
 
-            binding.detailFabShare.setOnClickListener(new View.OnClickListener() {
+        binding.detailTextViewBody.setTypeface(robotoMedium);
+        binding.detailTextViewBody.setText(joke.getBody());
+
+        binding.detailTextViewSubmittedBy.setTypeface(robotoMedium);
+        Spanned submittedBy = fromHtml(getString(R.string.submitted_by) +
+                "<a href=\"" + joke.getUrl() + "\">/u/" + joke.getUser() + "</a>");
+        binding.detailTextViewSubmittedBy.setText(submittedBy);
+        binding.detailTextViewSubmittedBy.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    private void setFabOnClickListener() {
+        binding.detailFabShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                String text = joke.getTitle()
+                        + "\n\n" + joke.getBody()
+                        + getString(R.string.shared_via_jokesby);
+                sharingIntent.putExtra(Intent.EXTRA_TEXT, text);
+                startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_via)));
+            }
+        });
+    }
+
+    private void setUpRadioButtons() {
+        RadioGroup radioGroup = binding.detailRatingBar.ratingBarRadioGroup;
+        for (int i = 0; i < radioGroup.getChildCount(); i++) {
+            final AppCompatRadioButton button = (AppCompatRadioButton) radioGroup.getChildAt(i);
+            ColorStateList grayColorStateList =
+                    ContextCompat.getColorStateList(this, R.color.radio_button_color_state);
+            ViewCompat.setBackgroundTintList(button, grayColorStateList);
+            button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                    sharingIntent.setType("text/plain");
-                    String text = joke.getTitle()
-                            + "\n\n" + joke.getBody()
-                            + getString(R.string.shared_via_jokesby);
-                    sharingIntent.putExtra(Intent.EXTRA_TEXT, text);
-                    startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_via)));
+                    binding.detailRatingBar.ratingBarRadioGroup.clearCheck();
+                    radioButton = (AppCompatRadioButton) view;
+                    joke.setRating(radioButton.getTag().toString());
+                    presenter.updateRated(joke);
                 }
             });
         }
+    }
 
+    private void setScrollViewListener() {
         binding.detailScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
@@ -150,11 +203,41 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
                 return true;
             case R.id.action_favourite:
                 if (joke != null) {
-                    presenter.update(joke);
+                    presenter.updateFavourite(joke);
                 }
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onStartLoad() {
+        if (binding.detailScrollView.getVisibility() != View.GONE) {
+            binding.detailScrollView.setVisibility(View.GONE);
+        }
+
+        if (binding.detailFabShare.getVisibility() != View.GONE) {
+            binding.detailFabShare.setVisibility(View.GONE);
+        }
+
+        if (binding.detailProgressBar.getVisibility() != View.VISIBLE) {
+            binding.detailProgressBar.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onPostLoad() {
+        if (binding.detailScrollView.getVisibility() != View.VISIBLE) {
+            binding.detailScrollView.setVisibility(View.VISIBLE);
+        }
+
+        if (binding.detailFabShare.getVisibility() != View.VISIBLE) {
+            binding.detailFabShare.setVisibility(View.VISIBLE);
+        }
+
+        if (binding.detailProgressBar.getVisibility() != View.GONE) {
+            binding.detailProgressBar.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -179,6 +262,23 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     }
 
     @Override
+    public void checkRating() {
+        radioButton.setChecked(true);
+    }
+
+    @Override
+    public void checkRating(String rating) {
+        RadioGroup radioGroup = binding.detailRatingBar.ratingBarRadioGroup;
+        for (int i = 0; i < radioGroup.getChildCount(); i++) {
+            AppCompatRadioButton radioButton = (AppCompatRadioButton) radioGroup.getChildAt(i);
+            if (rating.equals(radioButton.getTag().toString())) {
+                radioButton.setChecked(true);
+                break;
+            }
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         presenter.clearDisposables();
@@ -186,6 +286,9 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
 
     @Override
     public void showError(String message) {
+        if (binding.detailProgressBar.getVisibility() == View.VISIBLE) {
+            binding.detailProgressBar.setVisibility(View.GONE);
+        }
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
