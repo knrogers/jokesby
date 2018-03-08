@@ -73,7 +73,7 @@ public class DataManagerImpl implements DataManager {
         List<Joke> filteredJokes = new ArrayList<>();
         for (Joke joke : jokes) {
             String body = joke.getBody();
-            if (!body.contains("[removed]") && !body.contains("[deleted]")) {
+            if (body != null && !body.contains("[removed]") && !body.contains("[deleted]")) {
                 joke.setTitle(fromHtml(joke.getTitle()));
                 joke.setBody(fromHtml(body));
                 filteredJokes.add(joke);
