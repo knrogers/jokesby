@@ -58,7 +58,7 @@ public class DataManagerImpl implements DataManager {
                 if (jokeContainer != null) {
                     List<Joke> jokes = jokeContainer.getJokes();
                     List<Joke> filteredJokes = getFilteredJokes(jokes);
-                    presenter.showJokes(filteredJokes);
+                    presenter.showJokesFromApi(filteredJokes);
                 }
             }
         };
@@ -111,7 +111,7 @@ public class DataManagerImpl implements DataManager {
                     jokes.add(joke);
                 }
                 cursor.close();
-                presenter.showJokes(jokes);
+                presenter.showJokesFromFavourites(jokes);
             }
 
             @Override
@@ -144,7 +144,7 @@ public class DataManagerImpl implements DataManager {
             @Override
             public void onNext(Cursor cursor) {
                 presenter.onPostLoad();
-                presenter.updateFavouriteIcon(cursor.getCount() >= 1);
+                presenter.onPostUpdateFavourite(cursor.getCount() >= 1);
                 cursor.close();
             }
 
@@ -178,7 +178,7 @@ public class DataManagerImpl implements DataManager {
                     insertFavourite(presenter, joke);
                     return;
                 }
-                presenter.updateFavouriteIcon(false);
+                presenter.onPostUpdateFavourite(false);
             }
         };
 
@@ -192,7 +192,7 @@ public class DataManagerImpl implements DataManager {
         DisposableObserver<Uri> insertFavouriteObserver = new DisposableObserver<Uri>() {
             @Override
             public void onNext(Uri uri) {
-                presenter.updateFavouriteIcon(uri != null);
+                presenter.onPostUpdateFavourite(uri != null);
             }
 
             @Override
