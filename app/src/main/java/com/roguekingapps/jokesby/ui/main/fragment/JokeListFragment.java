@@ -98,7 +98,7 @@ public class JokeListFragment extends Fragment  implements
         binding.listProgressBar.setVisibility(View.VISIBLE);
     }
 
-    public void showJokes(final List<Joke> jokes) {
+    public void showJokesFromApi(final List<Joke> jokes) {
         binding.listProgressBar.setVisibility(View.GONE);
         if (jokes == null) {
             showToast(getString(R.string.jokes_not_loaded));
@@ -111,6 +111,17 @@ public class JokeListFragment extends Fragment  implements
                 adapter.removeLast();
                 adapter.addJokes(jokes);
             }
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    public void showJokesFromFavourites(final List<Joke> jokes) {
+        binding.listProgressBar.setVisibility(View.GONE);
+        if (jokes == null) {
+            showToast(getString(R.string.jokes_not_loaded));
+        } else {
+            binding.listRecyclerView.setVisibility(View.VISIBLE);
+            adapter.setJokes(jokes);
             adapter.notifyDataSetChanged();
         }
     }
