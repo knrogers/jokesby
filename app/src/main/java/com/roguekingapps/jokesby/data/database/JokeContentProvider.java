@@ -145,6 +145,11 @@ public class JokeContentProvider extends ContentProvider {
                     FavouriteEntry.TABLE_NAME,
                     selection + context.getString(R.string.parameter_placeholder),
                     selectionArgs);
+        } else if (match == rated){
+            rowsDeleted = databaseOpenHelper.getReadableDatabase().delete(
+                    RatedEntry.TABLE_NAME,
+                    selection + context.getString(R.string.parameter_placeholder),
+                    selectionArgs);
         } else {
             throw new UnsupportedOperationException(context.getString(R.string.unknown_uri) + uri);
         }
