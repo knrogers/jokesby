@@ -38,6 +38,9 @@ public class BottomNavigationItemSelectedListener implements BottomNavigationVie
             case R.id.action_favourites:
                 callback.updateListFragment(listFragment, context.getString(R.string.favourites));
                 break;
+            case R.id.action_rated:
+                callback.updateListFragment(listFragment, context.getString(R.string.rated));
+                break;
         }
         return true;
     }

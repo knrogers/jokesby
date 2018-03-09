@@ -42,6 +42,11 @@ public class BottomNavigationItemReselectedListener implements BottomNavigationV
                         listFragment,
                         context.getString(R.string.favourites));
                 break;
+            case R.id.action_rated:
+                callback.updateCurrentFragment(
+                        listFragment,
+                        context.getString(R.string.rated));
+                break;
         }
     }
 
