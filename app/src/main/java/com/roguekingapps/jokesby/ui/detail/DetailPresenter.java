@@ -5,10 +5,6 @@ import com.roguekingapps.jokesby.ui.common.BasePresenter;
 
 public interface DetailPresenter extends BasePresenter {
 
-    void onStartLoad();
-
-    void onPostLoad();
-
     void queryFavourite(String apiId);
 
     void updateFavourite(Joke joke);
@@ -17,7 +13,9 @@ public interface DetailPresenter extends BasePresenter {
 
     void updateRated(Joke joke);
 
-    void checkRating();
+    void deleteRated(String apiId);
+
+    void onPostUpdateRating();
 
     void checkRating(String rating);
 

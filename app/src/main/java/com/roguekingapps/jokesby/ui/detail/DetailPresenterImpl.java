@@ -59,8 +59,13 @@ public class DetailPresenterImpl implements DetailPresenter {
     }
 
     @Override
-    public void checkRating() {
-        detailView.checkRating();
+    public void deleteRated(String apiId) {
+        dataManager.deleteRated(this, apiId);
+    }
+
+    @Override
+    public void onPostUpdateRating() {
+        detailView.onPostUpdateRating();
     }
 
     @Override

@@ -31,6 +31,16 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
+    public void onStartLoad() {
+        mainView.onStartLoad();
+    }
+
+    @Override
+    public void onPostLoad() {
+        mainView.onPostLoad();
+    }
+
+    @Override
     public void loadFromApi() {
         dataManager.loadFromApi(this);
     }
@@ -41,13 +51,18 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
+    public void loadFromRated() {
+        dataManager.loadFromRated(this);
+    }
+
+    @Override
     public void showJokesFromApi(List<Joke> jokes) {
         mainView.showJokesFromApi(jokes);
     }
 
     @Override
-    public void showJokesFromFavourites(List<Joke> jokes) {
-        mainView.showJokesFromFavourites(jokes);
+    public void showJokesFromDatabase(List<Joke> jokes) {
+        mainView.showJokesFromDatabase(jokes);
     }
 
     @Override

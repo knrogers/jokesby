@@ -4,6 +4,10 @@ import io.reactivex.disposables.Disposable;
 
 public interface BasePresenter {
 
+    void onStartLoad();
+
+    void onPostLoad();
+
     void showError(String message);
 
     void addDisposable(Disposable disposable);
