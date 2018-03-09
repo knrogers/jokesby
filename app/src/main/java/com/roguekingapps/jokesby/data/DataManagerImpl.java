@@ -52,21 +52,40 @@ public class DataManagerImpl implements DataManager {
 
     @Override
     public void loadFromApi(final MainPresenter presenter) {
-        Consumer<JokeContainer> jokeConsumer = new Consumer<JokeContainer>() {
+        DisposableObserver<JokeContainer> jokeConsumer = new DisposableObserver<JokeContainer>() {
             @Override
-            public void accept(JokeContainer jokeContainer) throws Exception {
+            protected void onStart() {
+                super.onStart();
+                presenter.onStartLoad();
+            }
+
+            @Override
+            public void onNext(JokeContainer jokeContainer) {
                 if (jokeContainer != null) {
                     List<Joke> jokes = jokeContainer.getJokes();
                     List<Joke> filteredJokes = getFilteredJokes(jokes);
+                    presenter.onPostLoad();
                     presenter.showJokesFromApi(filteredJokes);
                 }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, e.getMessage(), e);
+                presenter.onPostLoad();
+                presenter.showError(context.getResources().getString(R.string.error_query_api));
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         };
 
         presenter.addDisposable(apiHelper.getJokeContainerObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(jokeConsumer));
+                .subscribeWith(jokeConsumer));
     }
 
     private List<Joke> getFilteredJokes(List<Joke> jokes) {
@@ -93,10 +112,15 @@ public class DataManagerImpl implements DataManager {
         return result;
     }
 
-
     @Override
     public void loadFromFavourites(final MainPresenter presenter) {
         DisposableObserver<Cursor> queryAllFavouritesObserver = new DisposableObserver<Cursor>() {
+            @Override
+            protected void onStart() {
+                super.onStart();
+                presenter.onStartLoad();
+            }
+
             @Override
             public void onNext(Cursor cursor) {
                 List<Joke> jokes = new ArrayList<>();
@@ -111,12 +135,14 @@ public class DataManagerImpl implements DataManager {
                     jokes.add(joke);
                 }
                 cursor.close();
-                presenter.showJokesFromFavourites(jokes);
+                presenter.onPostLoad();
+                presenter.showJokesFromDatabase(jokes);
             }
 
             @Override
             public void onError(Throwable e) {
                 Log.e(TAG, e.getMessage(), e);
+                presenter.onPostLoad();
                 presenter.showError(context.getResources().getString(R.string.error_query_favourite));
             }
 
@@ -126,10 +152,58 @@ public class DataManagerImpl implements DataManager {
             }
         };
 
-        presenter.addDisposable(databaseHelper.getQueryAllFavouritesObservable()
+        presenter.addDisposable(databaseHelper.getQueryAllObservable(FavouriteEntry.CONTENT_URI)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(queryAllFavouritesObserver));
+    }
+
+    @Override
+    public void loadFromRated(final MainPresenter presenter) {
+        DisposableObserver<Cursor> queryAllRatedObserver = new DisposableObserver<Cursor>() {
+            @Override
+            protected void onStart() {
+                super.onStart();
+                presenter.onStartLoad();
+            }
+
+            @Override
+            public void onNext(Cursor cursor) {
+                List<Joke> jokes = new ArrayList<>();
+                cursor.moveToPosition(-1);
+                while (cursor.moveToNext()) {
+                    String apiId = cursor.getString(cursor.getColumnIndex(RatedEntry.COLUMN_API_ID));
+                    String title = cursor.getString(cursor.getColumnIndex(RatedEntry.COLUMN_TITLE));
+                    String body = cursor.getString(cursor.getColumnIndex(RatedEntry.COLUMN_BODY));
+                    String user = cursor.getString(cursor.getColumnIndex(RatedEntry.COLUMN_USER));
+                    String url = cursor.getString(cursor.getColumnIndex(RatedEntry.COLUMN_URL));
+                    String rating = cursor.getString(cursor.getColumnIndex(RatedEntry.COLUMN_RATING));
+                    Joke joke = new Joke(apiId, title, body, user, url);
+                    joke.setRating(rating);
+                    jokes.add(joke);
+                }
+                cursor.close();
+                presenter.onPostLoad();
+                presenter.showJokesFromDatabase(jokes);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, e.getMessage(), e);
+                presenter.onPostLoad();
+                presenter.showError(context.getResources().getString(R.string.error_query_favourite));
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
+
+        presenter.addDisposable(databaseHelper.getQueryAllObservable(RatedEntry.CONTENT_URI)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(queryAllRatedObserver));
     }
 
     @Override
@@ -182,7 +256,11 @@ public class DataManagerImpl implements DataManager {
             }
         };
 
-        presenter.addDisposable(databaseHelper.getDeleteObservable(joke.getId())
+        Observable<Integer> deleteObservable = databaseHelper.getDeleteObservable(
+                FavouriteEntry.CONTENT_URI,
+                FavouriteEntry.COLUMN_API_ID,
+                joke.getId());
+        presenter.addDisposable(deleteObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(deleteFavouriteConsumer));
@@ -264,7 +342,7 @@ public class DataManagerImpl implements DataManager {
                     insertRated(presenter, joke);
                     return;
                 }
-                presenter.checkRating();
+                presenter.onPostUpdateRating();
             }
         };
 
@@ -274,11 +352,30 @@ public class DataManagerImpl implements DataManager {
                 .subscribe(rowsUpdatedConsumer));
     }
 
+    @Override
+    public void deleteRated(final DetailPresenter presenter, String apiId) {
+        Consumer<Integer> rowsUpdatedConsumer = new Consumer<Integer>() {
+            @Override
+            public void accept(Integer rowsDeleted) throws Exception {
+                presenter.onPostUpdateRating();
+            }
+        };
+
+        Observable<Integer> deleteObservable = databaseHelper.getDeleteObservable(
+                RatedEntry.CONTENT_URI,
+                RatedEntry.COLUMN_API_ID,
+                apiId);
+        presenter.addDisposable(deleteObservable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(rowsUpdatedConsumer));
+    }
+
     private void insertRated(final DetailPresenter presenter, final Joke joke) {
         DisposableObserver<Uri> insertRatedObserver = new DisposableObserver<Uri>() {
             @Override
             public void onNext(Uri uri) {
-                presenter.checkRating();
+                presenter.onPostUpdateRating();
             }
 
             @Override
