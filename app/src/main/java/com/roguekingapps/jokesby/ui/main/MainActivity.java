@@ -89,11 +89,33 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onStartLoad() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        JokeListFragment selectedFragment =
+                (JokeListFragment) fragmentManager.findFragmentByTag(listFragmentTag);
+        if (selectedFragment != null) {
+            selectedFragment.onStartLoad();
+        }
+    }
+
+    @Override
+    public void onPostLoad() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        JokeListFragment selectedFragment =
+                (JokeListFragment) fragmentManager.findFragmentByTag(listFragmentTag);
+        if (selectedFragment != null) {
+            selectedFragment.onPostLoad();
+        }
+    }
+
+    @Override
     public void loadJokes() {
         if (listFragmentTag.equals(getString(R.string.random))) {
             presenter.loadFromApi();
         } else if (listFragmentTag.equals(getString(R.string.favourites))) {
             presenter.loadFromFavourites();
+        } else if (listFragmentTag.equals(getString(R.string.rated))) {
+            presenter.loadFromRated();
         }
     }
 
@@ -109,12 +131,14 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // If user clicked on favourites icon in detail screen.
+        // If user updated favourites or rating in detail screen.
         if (requestCode == getResources().getInteger(R.integer.request_code)
                 && resultCode == Activity.RESULT_OK) {
             // Reload master list to refresh view.
             if (listFragmentTag.equals(getString(R.string.favourites))) {
                 presenter.loadFromFavourites();
+            } else if (listFragmentTag.equals(getString(R.string.rated))) {
+                presenter.loadFromRated();
             }
         }
     }
@@ -130,12 +154,12 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void showJokesFromFavourites(List<Joke> jokes) {
+    public void showJokesFromDatabase(List<Joke> jokes) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         JokeListFragment selectedFragment =
                 (JokeListFragment) fragmentManager.findFragmentByTag(listFragmentTag);
         if (selectedFragment != null) {
-            selectedFragment.showJokesFromFavourites(jokes);
+            selectedFragment.showJokesFromDatabase(jokes);
         }
     }
 
