@@ -11,9 +11,9 @@ public interface DatabaseHelper {
 
     Observable<Cursor> getQueryObservable(Uri contentUri, String columnApiId, String apiId);
 
-    Observable<Cursor> getQueryAllFavouritesObservable();
+    Observable<Cursor> getQueryAllObservable(Uri contentUri);
 
-    Observable<Integer> getDeleteObservable(String apiId);
+    Observable<Integer> getDeleteObservable(Uri contentUri, String columnApiId, String apiId);
 
     Observable<Integer> getUpdateObservable(Joke joke);
 

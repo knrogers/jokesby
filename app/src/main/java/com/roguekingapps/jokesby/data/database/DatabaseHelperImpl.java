@@ -53,12 +53,12 @@ public class DatabaseHelperImpl implements DatabaseHelper {
     }
 
     @Override
-    public Observable<Cursor> getQueryAllFavouritesObservable() {
+    public Observable<Cursor> getQueryAllObservable(final Uri contentUri) {
         return Observable.create(new ObservableOnSubscribe<Cursor>() {
             @Override
             public void subscribe(ObservableEmitter<Cursor> emitter) throws Exception {
                 Cursor cursor = context.getContentResolver()
-                        .query(FavouriteEntry.CONTENT_URI, null, null, null, null);
+                        .query(contentUri, null, null, null, null);
                 if (cursor == null) {
                     emitter.onError(new Exception("Cursor returned from query was null."));
                     return;
@@ -69,11 +69,9 @@ public class DatabaseHelperImpl implements DatabaseHelper {
     }
 
     @Override
-    public Observable<Integer> getDeleteObservable(String apiId) {
-        return Observable.just(context.getContentResolver().delete(
-                        FavouriteEntry.CONTENT_URI,
-                        FavouriteEntry.COLUMN_API_ID,
-                        new String[]{apiId}));
+    public Observable<Integer> getDeleteObservable(Uri contentUri, String columnApiId, String apiId) {
+        return Observable.just(context.getContentResolver()
+                .delete(contentUri, columnApiId, new String[]{apiId}));
     }
 
     @Override
