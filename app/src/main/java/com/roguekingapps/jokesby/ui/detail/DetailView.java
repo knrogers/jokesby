@@ -1,14 +1,12 @@
 package com.roguekingapps.jokesby.ui.detail;
 
-public interface DetailView {
+import com.roguekingapps.jokesby.ui.common.BaseView;
 
-    void onStartLoad();
-
-    void onPostLoad();
+public interface DetailView extends BaseView {
 
     void onPostUpdateFavourite(boolean favourite);
 
-    void checkRating();
+    void onPostUpdateRating();
 
     void checkRating(String rating);
 
