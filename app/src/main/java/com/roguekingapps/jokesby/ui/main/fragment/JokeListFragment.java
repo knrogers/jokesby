@@ -87,21 +87,25 @@ public class JokeListFragment extends Fragment  implements
                 });
             }
         }
-        onPreLoad();
         listener.loadJokes();
         return binding.getRoot();
     }
 
-    private void onPreLoad() {
+    public void onStartLoad() {
         binding.listRecyclerView.setVisibility(View.GONE);
         binding.listEmptyView.setVisibility(View.GONE);
         binding.listProgressBar.setVisibility(View.VISIBLE);
     }
 
-    public void showJokesFromApi(final List<Joke> jokes) {
+    public void onPostLoad() {
         binding.listProgressBar.setVisibility(View.GONE);
+    }
+
+    public void showJokesFromApi(final List<Joke> jokes) {
         if (jokes == null) {
             showToast(getString(R.string.jokes_not_loaded));
+            binding.listEmptyView.setVisibility(View.VISIBLE);
+            binding.listEmptyView.setText(getString(R.string.jokes_not_loaded));
         } else {
             binding.listRecyclerView.setVisibility(View.VISIBLE);
             if (adapter.getJokes() == null) {
@@ -115,10 +119,18 @@ public class JokeListFragment extends Fragment  implements
         }
     }
 
-    public void showJokesFromFavourites(final List<Joke> jokes) {
-        binding.listProgressBar.setVisibility(View.GONE);
-        if (jokes == null) {
-            showToast(getString(R.string.jokes_not_loaded));
+    public void showJokesFromDatabase(final List<Joke> jokes) {
+        if (jokes.isEmpty()) {
+            if (getTag() != null) {
+                String emptyText = null;
+                if (getTag().equals(getString(R.string.favourites))) {
+                    emptyText = getString(R.string.add_favourites);
+                } else if (getTag().equals(getString(R.string.rated))) {
+                    emptyText = getString(R.string.rate_jokes);
+                }
+                binding.listEmptyView.setVisibility(View.VISIBLE);
+                binding.listEmptyView.setText(emptyText);
+            }
         } else {
             binding.listRecyclerView.setVisibility(View.VISIBLE);
             adapter.setJokes(jokes);
