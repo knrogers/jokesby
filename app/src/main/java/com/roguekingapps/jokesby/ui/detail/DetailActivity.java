@@ -39,7 +39,7 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     private int drawableId = -1;
     private AppCompatRadioButton radioButton;
     private boolean fromFavouriteList;
-    private int updateFavouriteResult = Activity.RESULT_CANCELED;
+    private int result = Activity.RESULT_CANCELED;
 
     @Inject
     DetailPresenter presenter;
@@ -131,10 +131,15 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    binding.detailRatingBar.ratingBarRadioGroup.clearCheck();
-                    radioButton = (AppCompatRadioButton) view;
-                    joke.setRating(radioButton.getTag().toString());
-                    presenter.updateRated(joke);
+                    if (radioButton != null && radioButton == view) {
+                        radioButton = null;
+                        joke.setRating(null);
+                        presenter.deleteRated(joke.getId());
+                    } else {
+                        radioButton = (AppCompatRadioButton) view;
+                        joke.setRating(radioButton.getTag().toString());
+                        presenter.updateRated(joke);
+                    }
                 }
             });
         }
@@ -188,14 +193,14 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(getString(R.string.result_code), updateFavouriteResult);
+        outState.putInt(getString(R.string.result_code), result);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState.containsKey(getString(R.string.result_code))) {
-            updateFavouriteResult = savedInstanceState.getInt(getString(R.string.result_code));
+            result = savedInstanceState.getInt(getString(R.string.result_code));
         }
     }
 
@@ -258,7 +263,7 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
 
     @Override
     public void onPostUpdateFavourite(boolean favourite) {
-        updateFavouriteResult = Activity.RESULT_OK;
+        result = Activity.RESULT_OK;
         if (favourite) {
             updateFavouriteIcon(R.drawable.ic_favourite_black);
         } else {
@@ -279,8 +284,13 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     }
 
     @Override
-    public void checkRating() {
-        radioButton.setChecked(true);
+    public void onPostUpdateRating() {
+        result = Activity.RESULT_OK;
+        if (joke.getRating() == null) {
+            binding.detailRatingBar.ratingBarRadioGroup.clearCheck();
+        } else {
+            radioButton.setChecked(true);
+        }
     }
 
     @Override
@@ -290,6 +300,7 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
             AppCompatRadioButton radioButton = (AppCompatRadioButton) radioGroup.getChildAt(i);
             if (rating.equals(radioButton.getTag().toString())) {
                 radioButton.setChecked(true);
+                this.radioButton = radioButton;
                 break;
             }
         }
@@ -297,7 +308,7 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
 
     @Override
     public void finish() {
-        setResult(updateFavouriteResult);
+        setResult(result);
         super.finish();
     }
 
