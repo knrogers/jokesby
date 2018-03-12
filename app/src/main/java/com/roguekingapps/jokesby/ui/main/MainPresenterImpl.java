@@ -41,18 +41,23 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
-    public void loadFromApi() {
-        dataManager.loadFromApi(this);
+    public void loadHot() {
+        dataManager.loadHot(this);
     }
 
     @Override
-    public void loadFromFavourites() {
-        dataManager.loadFromFavourites(this);
+    public void loadRandom() {
+        dataManager.loadRandom(this);
     }
 
     @Override
-    public void loadFromRated() {
-        dataManager.loadFromRated(this);
+    public void loadFavourites() {
+        dataManager.loadFavourites(this);
+    }
+
+    @Override
+    public void loadRated() {
+        dataManager.loadRated(this);
     }
 
     @Override

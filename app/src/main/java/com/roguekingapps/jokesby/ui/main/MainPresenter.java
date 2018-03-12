@@ -7,11 +7,13 @@ import java.util.List;
 
 public interface MainPresenter extends BasePresenter {
 
-    void loadFromApi();
+    void loadHot();
 
-    void loadFromFavourites();
+    void loadRandom();
 
-    void loadFromRated();
+    void loadFavourites();
+
+    void loadRated();
 
     void showJokesFromApi(List<Joke> jokes);
 

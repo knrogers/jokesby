@@ -6,11 +6,13 @@ import com.roguekingapps.jokesby.ui.main.MainPresenter;
 
 public interface DataManager {
 
-    void loadFromApi(MainPresenter mainPresenter);
+    void loadHot(MainPresenter mainPresenter);
 
-    void loadFromFavourites(MainPresenter mainPresenter);
+    void loadRandom(MainPresenter mainPresenter);
 
-    void loadFromRated(MainPresenter mainPresenter);
+    void loadFavourites(MainPresenter mainPresenter);
+
+    void loadRated(MainPresenter mainPresenter);
 
     void queryFavourite(DetailPresenter detailPresenter, String apiId);
 
