@@ -2,7 +2,8 @@ package com.roguekingapps.jokesby.di.module;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.roguekingapps.jokesby.data.network.JokeApi;
+import com.roguekingapps.jokesby.data.network.PushShiftApi;
+import com.roguekingapps.jokesby.data.network.RedditApi;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -19,12 +20,19 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class NetworkModule {
 
-    private static final String BASE_API_URL = "https://api.pushshift.io/";
+    private static final String BASE_PUSH_SHIFT_URL = "https://api.pushshift.io/";
+    private static final String BASE_REDDIT_URL = "https://www.reddit.com/";
 
     @Provides
     @Singleton
-    JokeApi provideJokeApi() {
-        return getRetrofit().create(JokeApi.class);
+    PushShiftApi providePushShiftApi() {
+        return getPushShiftRetrofit().create(PushShiftApi.class);
+    }
+
+    @Provides
+    @Singleton
+    RedditApi provideRedditApi() {
+        return getRedditRetrofit().create(RedditApi.class);
     }
 
     @Provides
@@ -34,9 +42,19 @@ public class NetworkModule {
     }
 
     @Singleton
-    private Retrofit getRetrofit() {
+    private Retrofit getPushShiftRetrofit() {
         return new Retrofit.Builder()
-                .baseUrl(BASE_API_URL)
+                .baseUrl(BASE_PUSH_SHIFT_URL)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(getGson()))
+                .client(getOkHttpClient())
+                .build();
+    }
+
+    @Singleton
+    private Retrofit getRedditRetrofit() {
+        return new Retrofit.Builder()
+                .baseUrl(BASE_REDDIT_URL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(getGson()))
                 .client(getOkHttpClient())
