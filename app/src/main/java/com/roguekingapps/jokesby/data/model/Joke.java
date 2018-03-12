@@ -18,6 +18,7 @@ public class Joke implements Parcelable {
 
     private String url;
     private String rating;
+    private boolean stickied;
 
     public Joke(String id, String title, String body, String user, String url) {
         this.id = id;
@@ -34,6 +35,7 @@ public class Joke implements Parcelable {
         user = in.readString();
         url = in.readString();
         rating = in.readString();
+        stickied = in.readInt() != 0;
     }
 
     public static final Creator<Joke> CREATOR = new Creator<Joke>() {
@@ -96,6 +98,14 @@ public class Joke implements Parcelable {
         this.rating = rating;
     }
 
+    public boolean isStickied() {
+        return stickied;
+    }
+
+    public void setStickied(boolean stickied) {
+        this.stickied = stickied;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -109,5 +119,6 @@ public class Joke implements Parcelable {
         parcel.writeString(user);
         parcel.writeString(url);
         parcel.writeString(rating);
+        parcel.writeInt(stickied ? 1 : 0);
     }
 }
