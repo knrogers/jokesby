@@ -71,9 +71,9 @@ public class MainActivity extends AppCompatActivity implements
     private String getListFragmentTag(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             return savedInstanceState.getString
-                    (getString(R.string.list_fragment_tag), getString(R.string.random));
+                    (getString(R.string.list_fragment_tag), getString(R.string.hot));
         }
-        return getString(R.string.random);
+        return getString(R.string.hot);
     }
 
     @Override
@@ -110,12 +110,14 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void loadJokes() {
-        if (listFragmentTag.equals(getString(R.string.random))) {
-            presenter.loadFromApi();
+        if (listFragmentTag.equals(getString(R.string.hot))) {
+            presenter.loadHot();
+        } else if (listFragmentTag.equals(getString(R.string.random))) {
+            presenter.loadRandom();
         } else if (listFragmentTag.equals(getString(R.string.favourites))) {
-            presenter.loadFromFavourites();
+            presenter.loadFavourites();
         } else if (listFragmentTag.equals(getString(R.string.rated))) {
-            presenter.loadFromRated();
+            presenter.loadRated();
         }
     }
 
@@ -136,9 +138,9 @@ public class MainActivity extends AppCompatActivity implements
                 && resultCode == Activity.RESULT_OK) {
             // Reload master list to refresh view.
             if (listFragmentTag.equals(getString(R.string.favourites))) {
-                presenter.loadFromFavourites();
+                presenter.loadFavourites();
             } else if (listFragmentTag.equals(getString(R.string.rated))) {
-                presenter.loadFromRated();
+                presenter.loadRated();
             }
         }
     }
