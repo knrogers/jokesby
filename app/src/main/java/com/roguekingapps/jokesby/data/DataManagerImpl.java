@@ -10,6 +10,8 @@ import com.roguekingapps.jokesby.R;
 import com.roguekingapps.jokesby.data.database.DatabaseHelper;
 import com.roguekingapps.jokesby.data.database.JokeContract.FavouriteEntry;
 import com.roguekingapps.jokesby.data.database.JokeContract.RatedEntry;
+import com.roguekingapps.jokesby.data.model.RedditChild;
+import com.roguekingapps.jokesby.data.model.RedditRoot;
 import com.roguekingapps.jokesby.data.network.ApiHelper;
 import com.roguekingapps.jokesby.data.model.Joke;
 import com.roguekingapps.jokesby.data.model.JokeContainer;
@@ -51,7 +53,51 @@ public class DataManagerImpl implements DataManager {
     }
 
     @Override
-    public void loadFromApi(final MainPresenter presenter) {
+    public void loadHot(final MainPresenter presenter) {
+        DisposableObserver<RedditRoot> jokeConsumer = new DisposableObserver<RedditRoot>() {
+            @Override
+            protected void onStart() {
+                super.onStart();
+                presenter.onStartLoad();
+            }
+
+            @Override
+            public void onNext(RedditRoot redditJsonRoot) {
+                if (redditJsonRoot != null && redditJsonRoot.getRedditData() != null) {
+                    List<RedditChild> redditChildren = redditJsonRoot.getRedditData().getRedditChildren();
+                    if (redditChildren != null) {
+                        List<Joke> jokes = new ArrayList<>();
+                        for (RedditChild redditChild : redditChildren) {
+                            jokes.add(redditChild.getJoke());
+                        }
+                        List<Joke> filteredJokes = getFilteredJokes(jokes);
+                        presenter.onPostLoad();
+                        presenter.showJokesFromApi(filteredJokes);
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, e.getMessage(), e);
+                presenter.onPostLoad();
+                presenter.showError(context.getResources().getString(R.string.error_query_api));
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
+
+        presenter.addDisposable(apiHelper.getJokeObservableFromReddit()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(jokeConsumer));
+    }
+
+    @Override
+    public void loadRandom(final MainPresenter presenter) {
         DisposableObserver<JokeContainer> jokeConsumer = new DisposableObserver<JokeContainer>() {
             @Override
             protected void onStart() {
@@ -82,7 +128,7 @@ public class DataManagerImpl implements DataManager {
             }
         };
 
-        presenter.addDisposable(apiHelper.getJokeContainerObservable()
+        presenter.addDisposable(apiHelper.getJokeObservableFromPushShift()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(jokeConsumer));
@@ -92,7 +138,8 @@ public class DataManagerImpl implements DataManager {
         List<Joke> filteredJokes = new ArrayList<>();
         for (Joke joke : jokes) {
             String body = joke.getBody();
-            if (body != null && !body.contains("[removed]") && !body.contains("[deleted]")) {
+            if (!joke.isStickied() && body != null
+                    && !body.contains("[removed]") && !body.contains("[deleted]")) {
                 joke.setTitle(fromHtml(joke.getTitle()));
                 joke.setBody(fromHtml(body));
                 filteredJokes.add(joke);
@@ -113,7 +160,7 @@ public class DataManagerImpl implements DataManager {
     }
 
     @Override
-    public void loadFromFavourites(final MainPresenter presenter) {
+    public void loadFavourites(final MainPresenter presenter) {
         DisposableObserver<Cursor> queryAllFavouritesObserver = new DisposableObserver<Cursor>() {
             @Override
             protected void onStart() {
@@ -159,7 +206,7 @@ public class DataManagerImpl implements DataManager {
     }
 
     @Override
-    public void loadFromRated(final MainPresenter presenter) {
+    public void loadRated(final MainPresenter presenter) {
         DisposableObserver<Cursor> queryAllRatedObserver = new DisposableObserver<Cursor>() {
             @Override
             protected void onStart() {
