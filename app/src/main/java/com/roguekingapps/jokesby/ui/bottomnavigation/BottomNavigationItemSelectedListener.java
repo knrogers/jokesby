@@ -32,6 +32,9 @@ public class BottomNavigationItemSelectedListener implements BottomNavigationVie
         JokeListFragment listFragment;
         listFragment = JokeListFragment.newInstance();
         switch (item.getItemId()) {
+            case R.id.action_hot:
+                callback.updateListFragment(listFragment, context.getString(R.string.hot));
+                break;
             case R.id.action_random:
                 callback.updateListFragment(listFragment, context.getString(R.string.random));
                 break;
