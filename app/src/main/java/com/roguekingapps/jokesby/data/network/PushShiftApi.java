@@ -6,8 +6,8 @@ import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
-public interface JokeApi {
+public interface PushShiftApi {
 
-    @GET("reddit/search/submission/?subreddit=jokes&stickied=false&size=500&score=>50&sort=desc")
+    @GET("reddit/search/submission/?subreddit=jokes&stickied=false&size=500&score=>9&sort=desc")
     Observable<JokeContainer> loadJokes(@Query("before") String daysBefore, @Query("after") String daysAfter);
 }

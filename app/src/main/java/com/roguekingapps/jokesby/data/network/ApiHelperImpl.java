@@ -1,5 +1,6 @@
 package com.roguekingapps.jokesby.data.network;
 
+import com.roguekingapps.jokesby.data.model.RedditRoot;
 import com.roguekingapps.jokesby.data.model.JokeContainer;
 
 import java.util.Random;
@@ -15,19 +16,26 @@ import io.reactivex.Observable;
 @Singleton
 public class ApiHelperImpl implements ApiHelper {
 
-    private JokeApi jokeApi;
+    private RedditApi redditApi;
+    private PushShiftApi pushShiftApi;
     private Random random;
 
     @Inject
-    ApiHelperImpl(JokeApi jokeApi, Random random) {
-        this.jokeApi = jokeApi;
+    ApiHelperImpl(RedditApi redditApi, PushShiftApi pushShiftApi, Random random) {
+        this.redditApi = redditApi;
+        this.pushShiftApi = pushShiftApi;
         this.random = random;
     }
 
     @Override
-    public Observable<JokeContainer> getJokeContainerObservable() {
+    public Observable<RedditRoot> getJokeObservableFromReddit() {
+        return redditApi.loadInitialHotJokes();
+    }
+
+    @Override
+    public Observable<JokeContainer> getJokeObservableFromPushShift() {
         String[] days = getDays();
-        return jokeApi.loadJokes(days[0] + "d", days[1] + "d");
+        return pushShiftApi.loadJokes(days[0] + "d", days[1] + "d");
     }
 
     private String[] getDays() {
