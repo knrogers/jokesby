@@ -7,8 +7,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/rating_bar_margin_vertical">
 
-        <RadioGroup
-            android:id="@+id/rating_bar_radio_group"
+        <LinearLayout
+            android:id="@+id/rating_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/rating_bar_radio_group_height"
             android:layout_marginEnd="@dimen/rating_bar_radio_group_margin"
@@ -19,42 +19,42 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <android.support.v7.widget.AppCompatRadioButton
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/rating_bar_button_laugh"
-                style="@style/RatingRadioButton"
+                style="@style/RatingButton"
                 android:background="@drawable/ic_laugh"
                 android:tag="@string/laugh_emoticon" />
 
-            <android.support.v7.widget.AppCompatRadioButton
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/rating_bar_button_happy"
-                style="@style/RatingRadioButton"
+                style="@style/RatingButton"
                 android:background="@drawable/ic_happy"
                 android:tag="@string/happy_emoticon" />
 
-            <android.support.v7.widget.AppCompatRadioButton
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/rating_bar_button_tongue_out"
-                style="@style/RatingRadioButton"
+                style="@style/RatingButton"
                 android:background="@drawable/ic_tongue_out"
                 android:tag="@string/tongue_out_emoticon" />
 
-            <android.support.v7.widget.AppCompatRadioButton
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/rating_bar_button_surprised"
-                style="@style/RatingRadioButton"
+                style="@style/RatingButton"
                 android:background="@drawable/ic_surprised"
                 android:tag="@string/surprised_emoticon" />
 
-            <android.support.v7.widget.AppCompatRadioButton
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/rating_bar_button_neutral"
-                style="@style/RatingRadioButton"
+                style="@style/RatingButton"
                 android:background="@drawable/ic_neutral"
                 android:tag="@string/neutral_emoticon" />
 
-            <android.support.v7.widget.AppCompatRadioButton
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/rating_bar_button_sad"
-                style="@style/RatingRadioButton"
+                style="@style/RatingButton"
                 android:background="@drawable/ic_sad"
                 android:tag="@string/sad_emoticon" />
 
-        </RadioGroup>
+        </LinearLayout>
     </android.support.constraint.ConstraintLayout>
 </layout>

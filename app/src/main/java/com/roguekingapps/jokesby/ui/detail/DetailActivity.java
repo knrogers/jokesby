@@ -12,14 +12,14 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatRadioButton;
+import android.support.v7.widget.AppCompatButton;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RadioGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.roguekingapps.jokesby.JokesbyApplication;
@@ -43,7 +43,7 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     private Joke joke;
     private Menu menu;
     private int drawableId = -1;
-    private AppCompatRadioButton radioButton;
+    private AppCompatButton ratingButton;
     private boolean fromFavouriteList;
     private int result = Activity.RESULT_CANCELED;
 
@@ -82,10 +82,10 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
 
         if (joke != null) {
             updateFavourite();
+            setUpRadioButtons();
             updateRating();
             updateTextViews();
             setFabOnClickListener();
-            setUpRadioButtons();
         }
         setScrollViewListener();
     }
@@ -162,28 +162,48 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     }
 
     private void setUpRadioButtons() {
-        RadioGroup radioGroup = binding.detailRatingBar.ratingBarRadioGroup;
-        for (int i = 0; i < radioGroup.getChildCount(); i++) {
-            final AppCompatRadioButton button = (AppCompatRadioButton) radioGroup.getChildAt(i);
-            ColorStateList grayColorStateList =
-                    ContextCompat.getColorStateList(this, R.color.radio_button_color_state);
-            ViewCompat.setBackgroundTintList(button, grayColorStateList);
+        LinearLayout ratingLayout = binding.detailRatingBar.ratingBarLayout;
+        ColorStateList gray =
+                ContextCompat.getColorStateList(this, R.color.gray_semi_transparent_88);
+        for (int i = 0; i < ratingLayout.getChildCount(); i++) {
+            AppCompatButton button = (AppCompatButton) ratingLayout.getChildAt(i);
+            ViewCompat.setBackgroundTintList(button, gray);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (radioButton != null && radioButton == view) {
-                        radioButton = null;
-                        joke.setRating(null);
-                        presenter.deleteRated(joke.getId());
-                    } else {
-                        radioButton = (AppCompatRadioButton) view;
-                        joke.setRating(radioButton.getTag().toString());
-                        presenter.updateRated(joke);
-                    }
+                    AppCompatButton clickedButton = (AppCompatButton) view;
+                    updateRatingButton(clickedButton);
                 }
             });
         }
     }
+
+    private void updateRatingButton(AppCompatButton buttonToUpdate) {
+        LinearLayout ratingLayout = binding.detailRatingBar.ratingBarLayout;
+        ColorStateList gray =
+                ContextCompat.getColorStateList(this, R.color.gray_semi_transparent_88);
+        ColorStateList blue =
+                ContextCompat.getColorStateList(DetailActivity.this, R.color.accent);
+        if (ratingButton != null && ratingButton == buttonToUpdate) {
+            ratingButton = null;
+            joke.setRating(null);
+            ViewCompat.setBackgroundTintList(buttonToUpdate, gray);
+            presenter.deleteRated(joke.getId());
+        } else {
+            ratingButton = buttonToUpdate;
+            joke.setRating(ratingButton.getTag().toString());
+            for (int i = 0; i < ratingLayout.getChildCount(); i++) {
+                AppCompatButton button = (AppCompatButton) ratingLayout.getChildAt(i);
+                if (button == buttonToUpdate) {
+                    ViewCompat.setBackgroundTintList(button, blue);
+                } else {
+                    ViewCompat.setBackgroundTintList(button, gray);
+                }
+            }
+            presenter.updateRated(joke);
+        }
+    }
+
 
     private void setScrollViewListener() {
         binding.detailScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
@@ -316,21 +336,18 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     @Override
     public void onPostUpdateRating() {
         result = Activity.RESULT_OK;
-        if (joke.getRating() == null) {
-            binding.detailRatingBar.ratingBarRadioGroup.clearCheck();
-        } else {
-            radioButton.setChecked(true);
-        }
     }
 
     @Override
     public void checkRating(String rating) {
-        RadioGroup radioGroup = binding.detailRatingBar.ratingBarRadioGroup;
-        for (int i = 0; i < radioGroup.getChildCount(); i++) {
-            AppCompatRadioButton radioButton = (AppCompatRadioButton) radioGroup.getChildAt(i);
-            if (rating.equals(radioButton.getTag().toString())) {
-                radioButton.setChecked(true);
-                this.radioButton = radioButton;
+        LinearLayout ratingLayout = binding.detailRatingBar.ratingBarLayout;
+        ColorStateList blue =
+                ContextCompat.getColorStateList(DetailActivity.this, R.color.accent);
+        for (int i = 0; i < ratingLayout.getChildCount(); i++) {
+            AppCompatButton ratingButton = (AppCompatButton) ratingLayout.getChildAt(i);
+            if (rating.equals(ratingButton.getTag().toString())) {
+                ViewCompat.setBackgroundTintList(ratingButton, blue);
+                this.ratingButton = ratingButton;
                 break;
             }
         }
