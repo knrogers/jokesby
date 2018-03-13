@@ -47,6 +47,7 @@ public class ListFragment extends Fragment  implements
     private ListFragmentComponent fragmentComponent;
     private RecyclerView.SmoothScroller smoothScroller;
     private String jokeFragmentTag;
+    private boolean initialLoad = true;
 
     @Inject
     ListAdapter adapter;
@@ -92,6 +93,9 @@ public class ListFragment extends Fragment  implements
                     @Override
                     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                         super.onScrolled(recyclerView, dx, dy);
+                        if (initialLoad) {
+                            initialLoad = false;
+                        }
                         adapter.loadMore(linearLayoutManager);
                     }
                 });
@@ -134,10 +138,26 @@ public class ListFragment extends Fragment  implements
         return jokeFragmentTagId;
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(getString(R.string.initial_load), initialLoad);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            initialLoad = savedInstanceState.getBoolean(getString(R.string.initial_load));
+        }
+    }
+
     public void onStartLoad() {
-        binding.listRecyclerView.setVisibility(View.GONE);
-        binding.listEmptyView.setVisibility(View.GONE);
-        binding.listProgressBar.setVisibility(View.VISIBLE);
+        if (initialLoad) {
+            binding.listRecyclerView.setVisibility(View.GONE);
+            binding.listEmptyView.setVisibility(View.GONE);
+            binding.listProgressBar.setVisibility(View.VISIBLE);
+        }
     }
 
     public void onPostLoad() {

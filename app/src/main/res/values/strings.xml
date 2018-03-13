@@ -19,6 +19,7 @@
     <string name="happy_emoticon" translatable="false">happy emoticon</string>
     <string name="laugh_emoticon" translatable="false">laugh emoticon</string>
     <string name="result_code" translatable="false">result code</string>
+    <string name="initial_load" translatable="false">initialLoad</string>
     <string name="favourites">Favourites</string>
     <string name="hot">Hot</string>
     <string name="random">Random</string>
