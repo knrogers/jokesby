@@ -11,6 +11,7 @@ import com.roguekingapps.jokesby.data.database.DatabaseHelper;
 import com.roguekingapps.jokesby.data.database.JokeContract.FavouriteEntry;
 import com.roguekingapps.jokesby.data.database.JokeContract.RatedEntry;
 import com.roguekingapps.jokesby.data.model.RedditChild;
+import com.roguekingapps.jokesby.data.model.RedditData;
 import com.roguekingapps.jokesby.data.model.RedditRoot;
 import com.roguekingapps.jokesby.data.network.ApiHelper;
 import com.roguekingapps.jokesby.data.model.Joke;
@@ -53,7 +54,7 @@ public class DataManagerImpl implements DataManager {
     }
 
     @Override
-    public void loadHot(final MainPresenter presenter) {
+    public void loadHot(final MainPresenter presenter, String after) {
         DisposableObserver<RedditRoot> jokeConsumer = new DisposableObserver<RedditRoot>() {
             @Override
             protected void onStart() {
@@ -62,9 +63,13 @@ public class DataManagerImpl implements DataManager {
             }
 
             @Override
-            public void onNext(RedditRoot redditJsonRoot) {
-                if (redditJsonRoot != null && redditJsonRoot.getRedditData() != null) {
-                    List<RedditChild> redditChildren = redditJsonRoot.getRedditData().getRedditChildren();
+            public void onNext(RedditRoot redditRoot) {
+                if (redditRoot != null && redditRoot.getRedditData() != null) {
+                    RedditData redditData = redditRoot.getRedditData();
+                    String after = redditData.getAfter();
+                    presenter.setAfter(after);
+
+                    List<RedditChild> redditChildren = redditData.getRedditChildren();
                     if (redditChildren != null) {
                         List<Joke> jokes = new ArrayList<>();
                         for (RedditChild redditChild : redditChildren) {
@@ -90,7 +95,7 @@ public class DataManagerImpl implements DataManager {
             }
         };
 
-        presenter.addDisposable(apiHelper.getJokeObservableFromReddit()
+        presenter.addDisposable(apiHelper.getJokeObservableFromReddit(after)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(jokeConsumer));

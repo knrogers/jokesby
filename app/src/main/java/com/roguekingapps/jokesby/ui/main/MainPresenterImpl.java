@@ -20,6 +20,7 @@ public class MainPresenterImpl implements MainPresenter {
     private DataManager dataManager;
     private MainView mainView;
     private CompositeDisposable disposables;
+    private String after;
 
     @Inject
     MainPresenterImpl(DataManager dataManager,
@@ -41,8 +42,13 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
+    public void setAfter(String after) {
+        this.after = after;
+    }
+
+    @Override
     public void loadHot() {
-        dataManager.loadHot(this);
+        dataManager.loadHot(this, after);
     }
 
     @Override

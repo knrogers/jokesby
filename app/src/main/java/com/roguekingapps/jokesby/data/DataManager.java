@@ -6,7 +6,7 @@ import com.roguekingapps.jokesby.ui.main.MainPresenter;
 
 public interface DataManager {
 
-    void loadHot(MainPresenter mainPresenter);
+    void loadHot(MainPresenter mainPresenter, String after);
 
     void loadRandom(MainPresenter mainPresenter);
 

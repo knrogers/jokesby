@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface MainPresenter extends BasePresenter {
 
+    void setAfter(String after);
+
     void loadHot();
 
     void loadRandom();
