@@ -7,7 +7,11 @@
     <string name="unknown_uri" translatable="false">Unknown uri: </string>
     <string name="insert_row_failed" translatable="false">Failed to insert row into </string>
     <string name="list_fragment_tag" translatable="false">listFragmentTag</string>
-    <string name="joke_list_fragment_tag" translatable="false">jokeListFragment</string>
+    <string name="detail_joke_fragment_tag" translatable="false">detailJokeFragmentTag</string>
+    <string name="hot_joke_fragment_tag" translatable="false">hotJokeFragmentTag</string>
+    <string name="random_joke_fragment_tag" translatable="false">randomJokeFragmentTag</string>
+    <string name="favourite_joke_fragment_tag" translatable="false">favouriteJokeFragmentTag</string>
+    <string name="rated_joke_fragment_tag" translatable="false">ratedJokeFragmentTag</string>
     <string name="sad_emoticon" translatable="false">sad emoticon</string>
     <string name="neutral_emoticon" translatable="false">neutral emoticon</string>
     <string name="surprised_emoticon" translatable="false">surprised emoticon</string>
@@ -25,7 +29,6 @@
     <string name="submitted_by">Submitted by&#xA0;</string>
     <string name="share_via">Share via</string>
     <string name="shared_via_jokesby">\n\nShared via Jokesby</string>
-    <string name="rating">Rating</string>
     <string name="rated">Rated</string>
     <string name="add_favourites">Add some favourites.</string>
     <string name="rate_jokes">Jokes you rate will be shown here.</string>
