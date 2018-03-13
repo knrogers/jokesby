@@ -3,6 +3,7 @@ package com.roguekingapps.jokesby.ui.main.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
@@ -16,9 +17,9 @@ import com.roguekingapps.jokesby.JokesbyApplication;
 import com.roguekingapps.jokesby.R;
 import com.roguekingapps.jokesby.data.model.Joke;
 import com.roguekingapps.jokesby.databinding.FragmentListJokeBinding;
-import com.roguekingapps.jokesby.di.component.DaggerJokeListFragmentComponent;
-import com.roguekingapps.jokesby.di.component.JokeListFragmentComponent;
-import com.roguekingapps.jokesby.di.module.JokeListFragmentModule;
+import com.roguekingapps.jokesby.di.component.DaggerListFragmentComponent;
+import com.roguekingapps.jokesby.di.component.ListFragmentComponent;
+import com.roguekingapps.jokesby.di.module.ListFragmentModule;
 import com.roguekingapps.jokesby.ui.adapter.ListAdapter;
 import com.roguekingapps.jokesby.ui.adapter.OnLoadMoreListener;
 
@@ -32,22 +33,25 @@ import javax.inject.Inject;
  * Activities that contain this fragment must implement the
  * {@link ListFragmentListener} interface
  * to handle interaction events.
- * Use the {@link JokeListFragment#newInstance} factory method to
+ * Use the {@link ListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class JokeListFragment extends Fragment  implements
+public class ListFragment extends Fragment  implements
         ListAdapter.JokeOnClickHandler,
         OnLoadMoreListener {
 
+    private static final String JOKE_FRAGMENT_TAG_ID = "jokeFragmentTagId";
+
     private FragmentListJokeBinding binding;
     private ListFragmentListener listener;
-    private JokeListFragmentComponent fragmentComponent;
+    private ListFragmentComponent fragmentComponent;
     private RecyclerView.SmoothScroller smoothScroller;
+    private String jokeFragmentTag;
 
     @Inject
     ListAdapter adapter;
 
-    public JokeListFragment() {
+    public ListFragment() {
         // Required empty public constructor
     }
 
@@ -55,10 +59,15 @@ public class JokeListFragment extends Fragment  implements
      * Use this factory method to create a new instance of
      * this fragment.
      *
-     * @return A new instance of fragment JokeListFragment.
+     * @param jokeFragmentTagId id of JokeFragment tag
+     * @return A new instance of fragment ListFragment.
      */
-    public static JokeListFragment newInstance() {
-        return new JokeListFragment();
+    public static ListFragment newInstance(int jokeFragmentTagId) {
+        ListFragment fragment = new ListFragment();
+        Bundle args = new Bundle();
+        args.putInt(JOKE_FRAGMENT_TAG_ID, jokeFragmentTagId);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -77,7 +86,8 @@ public class JokeListFragment extends Fragment  implements
             };
             final LinearLayoutManager linearLayoutManager =
                     (LinearLayoutManager) binding.listRecyclerView.getLayoutManager();
-            if (context.getString(R.string.random).equals(getTag())) {
+            if (context.getString(R.string.hot).equals(getTag())
+                    || context.getString(R.string.random).equals(getTag())) {
                 binding.listRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                     @Override
                     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -87,8 +97,41 @@ public class JokeListFragment extends Fragment  implements
                 });
             }
         }
-        listener.loadJokes();
+
+        Bundle args = getArguments();
+        int jokeFragmentTagId = getJokeFragmentTagId(args);
+        jokeFragmentTag = getString(jokeFragmentTagId);
+        JokeFragment jokeFragment = listener.getJokeFragment(jokeFragmentTag);
+
+        if (jokeFragment == null) {
+            showToast(getString(R.string.jokes_not_loaded));
+            binding.listRecyclerView.setVisibility(View.GONE);
+            binding.listEmptyView.setVisibility(View.GONE);
+            binding.listProgressBar.setVisibility(View.GONE);
+            binding.listEmptyView.setVisibility(View.VISIBLE);
+            binding.listEmptyView.setText(getString(R.string.jokes_not_loaded));
+            return binding.getRoot();
+        }
+
+        if (jokeFragment.getJokes() == null || jokeFragment.getJokes().isEmpty()) {
+            listener.loadJokes();
+        } else {
+            binding.listRecyclerView.setVisibility(View.VISIBLE);
+            adapter.setJokes(jokeFragment.getJokes());
+            adapter.notifyDataSetChanged();
+        }
+
         return binding.getRoot();
+    }
+
+    private int getJokeFragmentTagId(Bundle args) {
+        int jokeFragmentTagId = -1;
+        if (args != null) {
+            if (args.containsKey(JOKE_FRAGMENT_TAG_ID)) {
+                jokeFragmentTagId = args.getInt(JOKE_FRAGMENT_TAG_ID);
+            }
+        }
+        return jokeFragmentTagId;
     }
 
     public void onStartLoad() {
@@ -102,6 +145,7 @@ public class JokeListFragment extends Fragment  implements
     }
 
     public void showJokesFromApi(final List<Joke> jokes) {
+        listener.setJokes(jokes, jokeFragmentTag);
         if (jokes == null) {
             showToast(getString(R.string.jokes_not_loaded));
             binding.listEmptyView.setVisibility(View.VISIBLE);
@@ -121,13 +165,8 @@ public class JokeListFragment extends Fragment  implements
 
     public void showJokesFromDatabase(final List<Joke> jokes) {
         if (jokes.isEmpty()) {
-            if (getTag() != null) {
-                String emptyText = null;
-                if (getTag().equals(getString(R.string.favourites))) {
-                    emptyText = getString(R.string.add_favourites);
-                } else if (getTag().equals(getString(R.string.rated))) {
-                    emptyText = getString(R.string.rate_jokes);
-                }
+            String emptyText = getEmptyText();
+            if (emptyText != null) {
                 binding.listEmptyView.setVisibility(View.VISIBLE);
                 binding.listEmptyView.setText(emptyText);
             }
@@ -136,6 +175,19 @@ public class JokeListFragment extends Fragment  implements
             adapter.setJokes(jokes);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    @Nullable
+    private String getEmptyText() {
+        String emptyText = null;
+        if (getTag() != null) {
+            if (getTag().equals(getString(R.string.favourites))) {
+                emptyText = getString(R.string.add_favourites);
+            } else if (getTag().equals(getString(R.string.rated))) {
+                emptyText = getString(R.string.rate_jokes);
+            }
+        }
+        return emptyText;
     }
 
     public void showToast(String message) {
@@ -190,10 +242,10 @@ public class JokeListFragment extends Fragment  implements
         return binding.listRecyclerView.computeVerticalScrollOffset();
     }
 
-    public JokeListFragmentComponent getFragmentComponent() {
+    public ListFragmentComponent getFragmentComponent() {
         if (fragmentComponent == null) {
-            fragmentComponent = DaggerJokeListFragmentComponent.builder()
-                    .jokeListFragmentModule(new JokeListFragmentModule(this))
+            fragmentComponent = DaggerListFragmentComponent.builder()
+                    .listFragmentModule(new ListFragmentModule(this))
                     .applicationComponent(JokesbyApplication.get(getContext()).getComponent())
                     .build();
         }
