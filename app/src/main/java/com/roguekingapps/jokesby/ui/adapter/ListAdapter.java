@@ -134,7 +134,7 @@ public class ListAdapter extends RecyclerView.Adapter {
         JokeViewHolder(LayoutListItemJokeBinding layoutJokeListItemBinding) {
             super(layoutJokeListItemBinding.getRoot());
             this.layoutJokeListItemBinding = layoutJokeListItemBinding;
-            View view = this.layoutJokeListItemBinding.getRoot();
+            View view = this.layoutJokeListItemBinding.listItemCardView;
             view.setOnClickListener(this);
         }
 
