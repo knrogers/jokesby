@@ -7,7 +7,7 @@ import io.reactivex.Observable;
 
 public interface ApiHelper {
 
-    Observable<RedditRoot> getJokeObservableFromReddit();
+    Observable<RedditRoot> getJokeObservableFromReddit(String after);
 
     Observable<JokeContainer> getJokeObservableFromPushShift();
 }

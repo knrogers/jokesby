@@ -28,8 +28,8 @@ public class ApiHelperImpl implements ApiHelper {
     }
 
     @Override
-    public Observable<RedditRoot> getJokeObservableFromReddit() {
-        return redditApi.loadInitialHotJokes();
+    public Observable<RedditRoot> getJokeObservableFromReddit(String after) {
+        return redditApi.loadHotJokes(after);
     }
 
     @Override

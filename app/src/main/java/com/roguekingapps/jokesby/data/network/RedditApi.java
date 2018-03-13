@@ -9,8 +9,5 @@ import retrofit2.http.Query;
 public interface RedditApi {
 
     @GET("r/Jokes/hot.json?limit=50&count=50")
-    Observable<RedditRoot> loadInitialHotJokes();
-
-    @GET("r/Jokes/hot.json?limit=50&count=50")
     Observable<RedditRoot> loadHotJokes(@Query("after") String after);
 }
