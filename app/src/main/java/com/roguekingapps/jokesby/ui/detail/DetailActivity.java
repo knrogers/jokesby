@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
 import android.graphics.Typeface;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
@@ -27,6 +28,10 @@ import com.roguekingapps.jokesby.databinding.ActivityDetailBinding;
 import com.roguekingapps.jokesby.di.component.DaggerDetailActivityComponent;
 import com.roguekingapps.jokesby.di.component.DetailActivityComponent;
 import com.roguekingapps.jokesby.di.module.DetailActivityModule;
+import com.roguekingapps.jokesby.ui.main.fragment.JokeFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -58,10 +63,16 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+        JokeFragment jokeFragment = getJokeFragment();
+        if (jokeFragment == null) {
+            setUpJokeFragment();
+        }
+
         Intent intent = getIntent();
         if (intent != null) {
-            if (intent.hasExtra(getString(R.string.joke))) {
+            if (joke == null && intent.hasExtra(getString(R.string.joke))) {
                 joke = intent.getParcelableExtra(getString(R.string.joke));
+                addJokeTo(jokeFragment);
             }
             fromFavouriteList = intent.hasExtra(getString(R.string.favourite));
         }
@@ -74,6 +85,32 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
             setUpRadioButtons();
         }
         setScrollViewListener();
+    }
+
+    private JokeFragment getJokeFragment() {
+        String jokeFragmentTag = getString(R.string.detail_joke_fragment_tag);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        return (JokeFragment) fragmentManager
+                .findFragmentByTag(jokeFragmentTag);
+    }
+
+    private void setUpJokeFragment() {
+        JokeFragment jokeFragment = JokeFragment.newInstance();
+
+        String jokeFragmentTag = getString(R.string.detail_joke_fragment_tag);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .add(jokeFragment, jokeFragmentTag)
+                .commit();
+    }
+
+    private void addJokeTo(JokeFragment jokeFragment) {
+        if (jokeFragment != null &&
+                (jokeFragment.getJokes() == null || jokeFragment.getJokes().isEmpty())) {
+            List<Joke> jokes = new ArrayList<>();
+            jokes.add(joke);
+            jokeFragment.setJokes(jokes);
+        }
     }
 
     private void updateFavourite() {
@@ -178,16 +215,6 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
             result = Html.fromHtml(html);
         }
         return result;
-    }
-
-    public DetailActivityComponent getActivityComponent() {
-        if (activityComponent == null) {
-            activityComponent = DaggerDetailActivityComponent.builder()
-                    .detailActivityModule(new DetailActivityModule(this))
-                    .applicationComponent(JokesbyApplication.get(this).getComponent())
-                    .build();
-        }
-        return activityComponent;
     }
 
     @Override
@@ -324,5 +351,15 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
             binding.detailProgressBar.setVisibility(View.GONE);
         }
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    public DetailActivityComponent getActivityComponent() {
+        if (activityComponent == null) {
+            activityComponent = DaggerDetailActivityComponent.builder()
+                    .detailActivityModule(new DetailActivityModule(this))
+                    .applicationComponent(JokesbyApplication.get(this).getComponent())
+                    .build();
+        }
+        return activityComponent;
     }
 }
