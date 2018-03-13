@@ -21,7 +21,8 @@ import com.roguekingapps.jokesby.ui.bottomnavigation.BottomNavigationItemReselec
 import com.roguekingapps.jokesby.ui.bottomnavigation.BottomNavigationItemSelectedListener;
 import com.roguekingapps.jokesby.ui.bottomnavigation.BottomNavigationItemSelectedListener.OnNavigationItemSelectedCallback;
 import com.roguekingapps.jokesby.ui.detail.DetailActivity;
-import com.roguekingapps.jokesby.ui.main.fragment.JokeListFragment;
+import com.roguekingapps.jokesby.ui.main.fragment.JokeFragment;
+import com.roguekingapps.jokesby.ui.main.fragment.ListFragment;
 import com.roguekingapps.jokesby.ui.main.fragment.ListFragmentListener;
 
 import java.util.List;
@@ -58,10 +59,10 @@ public class MainActivity extends AppCompatActivity implements
                 .setOnNavigationItemReselectedListener(bottomNavigationItemReselectedListener);
         listFragmentTag = getListFragmentTag(savedInstanceState);
         FragmentManager fragmentManager = getSupportFragmentManager();
-        JokeListFragment selectedFragment =
-                (JokeListFragment) fragmentManager.findFragmentByTag(listFragmentTag);
+        ListFragment selectedFragment =
+                (ListFragment) fragmentManager.findFragmentByTag(listFragmentTag);
         if (selectedFragment == null) {
-            selectedFragment = JokeListFragment.newInstance();
+            selectedFragment = ListFragment.newInstance(R.string.hot_joke_fragment_tag);
         }
         fragmentManager.beginTransaction()
                 .replace(R.id.list_container, selectedFragment, listFragmentTag)
@@ -91,8 +92,8 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onStartLoad() {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        JokeListFragment selectedFragment =
-                (JokeListFragment) fragmentManager.findFragmentByTag(listFragmentTag);
+        ListFragment selectedFragment =
+                (ListFragment) fragmentManager.findFragmentByTag(listFragmentTag);
         if (selectedFragment != null) {
             selectedFragment.onStartLoad();
         }
@@ -101,11 +102,28 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onPostLoad() {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        JokeListFragment selectedFragment =
-                (JokeListFragment) fragmentManager.findFragmentByTag(listFragmentTag);
+        ListFragment selectedFragment =
+                (ListFragment) fragmentManager.findFragmentByTag(listFragmentTag);
         if (selectedFragment != null) {
             selectedFragment.onPostLoad();
         }
+    }
+
+    @Override
+    public JokeFragment getJokeFragment(String jokeFragmentTag) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        // Check to see if we have retained the worker fragment.
+        JokeFragment jokeFragment = (JokeFragment)
+                fragmentManager.findFragmentByTag(jokeFragmentTag);
+        // If not retained (or first time running), we need to create it.
+        if (jokeFragment == null) {
+            jokeFragment = JokeFragment.newInstance();
+            // Tell it who it is working with.
+            fragmentManager.beginTransaction()
+                    .add(jokeFragment, jokeFragmentTag)
+                    .commit();
+        }
+        return jokeFragment;
     }
 
     @Override
@@ -118,6 +136,16 @@ public class MainActivity extends AppCompatActivity implements
             presenter.loadFavourites();
         } else if (listFragmentTag.equals(getString(R.string.rated))) {
             presenter.loadRated();
+        }
+    }
+
+    @Override
+    public void setJokes(List<Joke> jokes, String jokeFragmentTag) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        JokeFragment jokeFragment =
+                (JokeFragment) fragmentManager.findFragmentByTag(jokeFragmentTag);
+        if (jokeFragment != null) {
+            jokeFragment.setJokes(jokes);
         }
     }
 
@@ -148,8 +176,8 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void showJokesFromApi(List<Joke> jokes) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        JokeListFragment selectedFragment =
-                (JokeListFragment) fragmentManager.findFragmentByTag(listFragmentTag);
+        ListFragment selectedFragment =
+                (ListFragment) fragmentManager.findFragmentByTag(listFragmentTag);
         if (selectedFragment != null) {
             selectedFragment.showJokesFromApi(jokes);
         }
@@ -158,8 +186,8 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void showJokesFromDatabase(List<Joke> jokes) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        JokeListFragment selectedFragment =
-                (JokeListFragment) fragmentManager.findFragmentByTag(listFragmentTag);
+        ListFragment selectedFragment =
+                (ListFragment) fragmentManager.findFragmentByTag(listFragmentTag);
         if (selectedFragment != null) {
             selectedFragment.showJokesFromDatabase(jokes);
         }
@@ -171,25 +199,30 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void updateListFragment(JokeListFragment jokeListFragment, String listFragmentTag) {
+    public void updateListFragment(ListFragment listFragment, String listFragmentTag) {
         this.listFragmentTag = listFragmentTag;
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.list_container, jokeListFragment, listFragmentTag)
+                .replace(R.id.list_container, listFragment, listFragmentTag)
                 .commit();
     }
 
     @Override
-    public void updateCurrentFragment(JokeListFragment jokeListFragment, String listFragmentTag) {
+    public void updateCurrentFragment(ListFragment listFragment, String listFragmentTag, int jokeFragmentTagId) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        JokeListFragment selectedFragment =
-                (JokeListFragment) fragmentManager.findFragmentByTag(listFragmentTag);
+        ListFragment selectedFragment =
+                (ListFragment) fragmentManager.findFragmentByTag(listFragmentTag);
         if (selectedFragment.getScrollOffset() > 0) {
             selectedFragment.resetScrollPosition();
         } else {
             this.listFragmentTag = listFragmentTag;
+            JokeFragment jokeFragment = (JokeFragment) fragmentManager
+                    .findFragmentByTag(getString(jokeFragmentTagId));
+            if (jokeFragment != null) {
+                jokeFragment.setJokes(null);
+            }
             fragmentManager.beginTransaction()
-                    .replace(R.id.list_container, jokeListFragment, listFragmentTag)
+                    .replace(R.id.list_container, listFragment, listFragmentTag)
                     .commit();
         }
     }
