@@ -7,7 +7,7 @@ import android.view.MenuItem;
 
 import com.roguekingapps.jokesby.R;
 import com.roguekingapps.jokesby.di.ActivityContext;
-import com.roguekingapps.jokesby.ui.main.fragment.JokeListFragment;
+import com.roguekingapps.jokesby.ui.main.fragment.ListFragment;
 
 import javax.inject.Inject;
 
@@ -29,19 +29,22 @@ public class BottomNavigationItemSelectedListener implements BottomNavigationVie
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        JokeListFragment listFragment;
-        listFragment = JokeListFragment.newInstance();
+        ListFragment listFragment;
         switch (item.getItemId()) {
             case R.id.action_hot:
+                listFragment = ListFragment.newInstance(R.string.hot_joke_fragment_tag);
                 callback.updateListFragment(listFragment, context.getString(R.string.hot));
                 break;
             case R.id.action_random:
+                listFragment = ListFragment.newInstance(R.string.random_joke_fragment_tag);
                 callback.updateListFragment(listFragment, context.getString(R.string.random));
                 break;
             case R.id.action_favourites:
+                listFragment = ListFragment.newInstance(R.string.favourite_joke_fragment_tag);
                 callback.updateListFragment(listFragment, context.getString(R.string.favourites));
                 break;
             case R.id.action_rated:
+                listFragment = ListFragment.newInstance(R.string.rated_joke_fragment_tag);
                 callback.updateListFragment(listFragment, context.getString(R.string.rated));
                 break;
         }
@@ -49,6 +52,6 @@ public class BottomNavigationItemSelectedListener implements BottomNavigationVie
     }
 
     public interface OnNavigationItemSelectedCallback {
-        void updateListFragment(JokeListFragment listFragment, String listFragmentTag);
+        void updateListFragment(ListFragment listFragment, String listFragmentTag);
     }
 }
