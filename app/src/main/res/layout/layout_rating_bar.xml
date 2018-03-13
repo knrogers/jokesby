@@ -5,13 +5,14 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/rating_bar_margin_top">
+        android:layout_marginTop="@dimen/rating_bar_margin_vertical">
 
         <RadioGroup
             android:id="@+id/rating_bar_radio_group"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_height="@dimen/rating_bar_radio_group_height"
+            android:layout_marginEnd="@dimen/rating_bar_radio_group_margin"
+            android:layout_marginStart="@dimen/rating_bar_radio_group_margin"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -20,62 +21,38 @@
 
             <android.support.v7.widget.AppCompatRadioButton
                 android:id="@+id/rating_bar_button_laugh"
-                android:layout_width="@dimen/rating_bar_button_width"
-                android:layout_height="@dimen/rating_bar_button_height"
-                android:layout_marginEnd="@dimen/rating_bar_margin"
-                android:layout_marginStart="@dimen/rating_bar_margin"
+                style="@style/RatingRadioButton"
                 android:background="@drawable/ic_laugh"
-                android:button="@null"
                 android:tag="@string/laugh_emoticon" />
 
             <android.support.v7.widget.AppCompatRadioButton
                 android:id="@+id/rating_bar_button_happy"
-                android:layout_width="@dimen/rating_bar_button_width"
-                android:layout_height="@dimen/rating_bar_button_height"
-                android:layout_marginEnd="@dimen/rating_bar_margin"
-                android:layout_marginStart="@dimen/rating_bar_margin"
+                style="@style/RatingRadioButton"
                 android:background="@drawable/ic_happy"
-                android:button="@null"
                 android:tag="@string/happy_emoticon" />
 
             <android.support.v7.widget.AppCompatRadioButton
                 android:id="@+id/rating_bar_button_tongue_out"
-                android:layout_width="@dimen/rating_bar_button_width"
-                android:layout_height="@dimen/rating_bar_button_height"
-                android:layout_marginEnd="@dimen/rating_bar_margin"
-                android:layout_marginStart="@dimen/rating_bar_margin"
+                style="@style/RatingRadioButton"
                 android:background="@drawable/ic_tongue_out"
-                android:button="@null"
                 android:tag="@string/tongue_out_emoticon" />
 
             <android.support.v7.widget.AppCompatRadioButton
                 android:id="@+id/rating_bar_button_surprised"
-                android:layout_width="@dimen/rating_bar_button_width"
-                android:layout_height="@dimen/rating_bar_button_height"
-                android:layout_marginEnd="@dimen/rating_bar_margin"
-                android:layout_marginStart="@dimen/rating_bar_margin"
+                style="@style/RatingRadioButton"
                 android:background="@drawable/ic_surprised"
-                android:button="@null"
                 android:tag="@string/surprised_emoticon" />
 
             <android.support.v7.widget.AppCompatRadioButton
                 android:id="@+id/rating_bar_button_neutral"
-                android:layout_width="@dimen/rating_bar_button_width"
-                android:layout_height="@dimen/rating_bar_button_height"
-                android:layout_marginEnd="@dimen/rating_bar_margin"
-                android:layout_marginStart="@dimen/rating_bar_margin"
+                style="@style/RatingRadioButton"
                 android:background="@drawable/ic_neutral"
-                android:button="@null"
                 android:tag="@string/neutral_emoticon" />
 
             <android.support.v7.widget.AppCompatRadioButton
                 android:id="@+id/rating_bar_button_sad"
-                android:layout_width="@dimen/rating_bar_button_width"
-                android:layout_height="@dimen/rating_bar_button_height"
-                android:layout_marginEnd="@dimen/rating_bar_margin"
-                android:layout_marginStart="@dimen/rating_bar_margin"
+                style="@style/RatingRadioButton"
                 android:background="@drawable/ic_sad"
-                android:button="@null"
                 android:tag="@string/sad_emoticon" />
 
         </RadioGroup>
