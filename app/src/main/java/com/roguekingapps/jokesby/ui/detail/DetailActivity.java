@@ -82,7 +82,7 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
 
         if (joke != null) {
             updateFavourite();
-            setUpRadioButtons();
+            setUpRatingButtons();
             updateRating();
             updateTextViews();
             setFabOnClickListener();
@@ -161,7 +161,7 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
         });
     }
 
-    private void setUpRadioButtons() {
+    private void setUpRatingButtons() {
         LinearLayout ratingLayout = binding.detailRatingBar.ratingBarLayout;
         ColorStateList gray =
                 ContextCompat.getColorStateList(this, R.color.gray_semi_transparent_88);
