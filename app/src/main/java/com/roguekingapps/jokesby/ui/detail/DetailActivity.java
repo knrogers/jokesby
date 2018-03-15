@@ -14,8 +14,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatImageButton;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +34,7 @@ import com.roguekingapps.jokesby.di.component.DaggerDetailActivityComponent;
 import com.roguekingapps.jokesby.di.component.DetailActivityComponent;
 import com.roguekingapps.jokesby.di.module.DetailActivityModule;
 import com.roguekingapps.jokesby.ui.main.fragment.JokeFragment;
+import com.roguekingapps.jokesby.ui.url.UrlSpanNoUnderLine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,7 +145,7 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
         binding.detailTextViewBody.setText(joke.getBody());
 
         binding.detailTextViewSubmittedBy.setTypeface(robotoMedium);
-        Spanned submittedBy = fromHtml(getString(R.string.submitted_by) +
+        Spannable submittedBy = fromHtml(getString(R.string.submitted_by) +
                 "<a href=\"" + joke.getUrl() + "\">/u/" + joke.getUser() + "</a>");
         binding.detailTextViewSubmittedBy.setText(submittedBy);
         binding.detailTextViewSubmittedBy.setMovementMethod(LinkMovementMethod.getInstance());
@@ -241,14 +245,24 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     }
 
     @SuppressWarnings("deprecation")
-    private Spanned fromHtml(String html){
+    private Spannable fromHtml(String html){
         Spanned result;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             result = Html.fromHtml(html,Html.FROM_HTML_MODE_LEGACY);
         } else {
             result = Html.fromHtml(html);
         }
-        return result;
+
+        Spannable spannable = new SpannableString(result);
+        URLSpan[] spans = spannable.getSpans(0, spannable.length(), URLSpan.class);
+        for (URLSpan span: spans) {
+            int start = spannable.getSpanStart(span);
+            int end = spannable.getSpanEnd(span);
+            spannable.removeSpan(span);
+            span = new UrlSpanNoUnderLine(span.getURL());
+            spannable.setSpan(span, start, end, 0);
+        }
+        return spannable;
     }
 
     @Override
