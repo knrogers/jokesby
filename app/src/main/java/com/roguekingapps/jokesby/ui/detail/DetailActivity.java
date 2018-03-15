@@ -12,7 +12,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatImageButton;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Space;
 import android.widget.Toast;
 
 import com.roguekingapps.jokesby.JokesbyApplication;
@@ -43,7 +44,7 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     private Joke joke;
     private Menu menu;
     private int drawableId = -1;
-    private AppCompatButton ratingButton;
+    private AppCompatImageButton ratingButton;
     private boolean fromFavouriteList;
     private int result = Activity.RESULT_CANCELED;
 
@@ -166,19 +167,22 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
         ColorStateList gray =
                 ContextCompat.getColorStateList(this, R.color.gray_semi_transparent_88);
         for (int i = 0; i < ratingLayout.getChildCount(); i++) {
-            AppCompatButton button = (AppCompatButton) ratingLayout.getChildAt(i);
+            if (ratingLayout.getChildAt(i) instanceof Space) {
+                continue;
+            }
+            AppCompatImageButton button = (AppCompatImageButton) ratingLayout.getChildAt(i);
             ViewCompat.setBackgroundTintList(button, gray);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    AppCompatButton clickedButton = (AppCompatButton) view;
+                    AppCompatImageButton clickedButton = (AppCompatImageButton) view;
                     updateRatingButton(clickedButton);
                 }
             });
         }
     }
 
-    private void updateRatingButton(AppCompatButton buttonToUpdate) {
+    private void updateRatingButton(AppCompatImageButton buttonToUpdate) {
         LinearLayout ratingLayout = binding.detailRatingBar.ratingBarLayout;
         ColorStateList gray =
                 ContextCompat.getColorStateList(this, R.color.gray_semi_transparent_88);
@@ -193,7 +197,10 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
             ratingButton = buttonToUpdate;
             joke.setRating(ratingButton.getTag().toString());
             for (int i = 0; i < ratingLayout.getChildCount(); i++) {
-                AppCompatButton button = (AppCompatButton) ratingLayout.getChildAt(i);
+                if (ratingLayout.getChildAt(i) instanceof Space) {
+                    continue;
+                }
+                AppCompatImageButton button = (AppCompatImageButton) ratingLayout.getChildAt(i);
                 if (button == buttonToUpdate) {
                     ViewCompat.setBackgroundTintList(button, blue);
                 } else {
@@ -344,7 +351,10 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
         ColorStateList blue =
                 ContextCompat.getColorStateList(DetailActivity.this, R.color.accent);
         for (int i = 0; i < ratingLayout.getChildCount(); i++) {
-            AppCompatButton ratingButton = (AppCompatButton) ratingLayout.getChildAt(i);
+            if (ratingLayout.getChildAt(i) instanceof Space) {
+                continue;
+            }
+            AppCompatImageButton ratingButton = (AppCompatImageButton) ratingLayout.getChildAt(i);
             if (rating.equals(ratingButton.getTag().toString())) {
                 ViewCompat.setBackgroundTintList(ratingButton, blue);
                 this.ratingButton = ratingButton;
