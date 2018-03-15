@@ -219,18 +219,22 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
                 int titleViewHeight = binding.detailTextViewTitle.getMeasuredHeight();
                 float alpha = 1f - (scrollY / (titleViewHeight * 0.75f));
 
-                if (alpha <= 1) {
+                if (alpha <= 1 && alpha >= 0) {
                     binding.detailFabShare.setAlpha(alpha);
-                }
-
-                if (alpha < 0) {
-                    if (binding.detailFabShare.isClickable()) {
+                    if (binding.detailFabShare.getVisibility() != View.VISIBLE
+                            && scrollY <= (titleViewHeight * 0.75f)) {
+                        binding.detailFabShare.setVisibility(View.VISIBLE);
+                        binding.detailFabShare.setClickable(true);
+                        binding.detailFabShare.setFocusable(true);
+                    }
+                } else if (alpha < 0) {
+                    binding.detailFabShare.setAlpha(-1);
+                    if (binding.detailFabShare.getVisibility() != View.GONE
+                            && scrollY >= (titleViewHeight * 0.75f)) {
+                        binding.detailFabShare.setVisibility(View.GONE);
                         binding.detailFabShare.setClickable(false);
                         binding.detailFabShare.setFocusable(false);
                     }
-                } else if (!binding.detailFabShare.isClickable()) {
-                    binding.detailFabShare.setClickable(true);
-                    binding.detailFabShare.setFocusable(true);
                 }
             }
         });
