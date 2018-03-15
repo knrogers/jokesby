@@ -10,9 +10,9 @@
         <LinearLayout
             android:id="@+id/rating_bar_layout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/rating_bar_radio_group_height"
-            android:layout_marginEnd="@dimen/rating_bar_radio_group_margin"
-            android:layout_marginStart="@dimen/rating_bar_radio_group_margin"
+            android:layout_height="@dimen/rating_bar_group_height"
+            android:layout_marginEnd="@dimen/rating_bar_group_margin"
+            android:layout_marginStart="@dimen/rating_bar_group_margin"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -20,8 +20,8 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <Space
-                android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_width="@dimen/rating_space_width"
+                android:layout_height="@dimen/rating_space_height"
                 android:layout_weight="1"/>
 
             <android.support.v7.widget.AppCompatImageButton
@@ -31,8 +31,8 @@
                 android:tag="@string/laugh_emoticon" />
 
             <Space
-                android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_width="@dimen/rating_space_width"
+                android:layout_height="@dimen/rating_space_height"
                 android:layout_weight="1"/>
 
             <android.support.v7.widget.AppCompatImageButton
@@ -42,8 +42,8 @@
                 android:tag="@string/happy_emoticon" />
 
             <Space
-                android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_width="@dimen/rating_space_width"
+                android:layout_height="@dimen/rating_space_height"
                 android:layout_weight="1"/>
 
             <android.support.v7.widget.AppCompatImageButton
@@ -53,8 +53,8 @@
                 android:tag="@string/tongue_out_emoticon" />
 
             <Space
-                android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_width="@dimen/rating_space_width"
+                android:layout_height="@dimen/rating_space_height"
                 android:layout_weight="1"/>
 
             <android.support.v7.widget.AppCompatImageButton
@@ -64,8 +64,8 @@
                 android:tag="@string/surprised_emoticon" />
 
             <Space
-                android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_width="@dimen/rating_space_width"
+                android:layout_height="@dimen/rating_space_height"
                 android:layout_weight="1"/>
 
             <android.support.v7.widget.AppCompatImageButton
@@ -75,8 +75,8 @@
                 android:tag="@string/neutral_emoticon" />
 
             <Space
-                android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_width="@dimen/rating_space_width"
+                android:layout_height="@dimen/rating_space_height"
                 android:layout_weight="1"/>
 
             <android.support.v7.widget.AppCompatImageButton
@@ -86,8 +86,8 @@
                 android:tag="@string/sad_emoticon" />
 
             <Space
-                android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_width="@dimen/rating_space_width"
+                android:layout_height="@dimen/rating_space_height"
                 android:layout_weight="1"/>
 
         </LinearLayout>

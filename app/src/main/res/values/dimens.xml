@@ -37,11 +37,16 @@
     <dimen name="detail_fab_share_elevation">6dp</dimen>
 
     <dimen name="rating_bar_margin_vertical">8dp</dimen>
-    <dimen name="rating_bar_radio_group_height">48dp</dimen>
-    <dimen name="rating_bar_radio_group_margin">8dp</dimen>
+
+    <dimen name="rating_bar_group_height">48dp</dimen>
+    <dimen name="rating_bar_group_margin">8dp</dimen>
+
+    <dimen name="rating_space_width">0dp</dimen>
+    <dimen name="rating_space_height">1dp</dimen>
 
     <dimen name="rating_bar_button_width">48dp</dimen>
     <dimen name="rating_bar_button_height">48dp</dimen>
     <dimen name="rating_bar_button_margin">8dp</dimen>
+
 
 </resources>
