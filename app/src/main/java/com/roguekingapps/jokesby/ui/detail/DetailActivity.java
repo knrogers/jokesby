@@ -46,8 +46,6 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     private DetailActivityComponent activityComponent;
     private ActivityDetailBinding binding;
     private Joke joke;
-    private Menu menu;
-    private int drawableId = -1;
     private AppCompatImageButton ratingButton;
     private boolean fromFavouriteList;
     private int result = Activity.RESULT_CANCELED;
@@ -152,16 +150,12 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     }
 
     private void setFabOnClickListener() {
-        binding.detailFabShare.setOnClickListener(new View.OnClickListener() {
+        binding.detailFabFavourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                sharingIntent.setType("text/plain");
-                String text = joke.getTitle()
-                        + "\n\n" + joke.getBody()
-                        + getString(R.string.shared_via_jokesby);
-                sharingIntent.putExtra(Intent.EXTRA_TEXT, text);
-                startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_via)));
+                if (joke != null) {
+                    presenter.updateFavourite(joke);
+                }
             }
         });
     }
@@ -224,20 +218,20 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
                 float alpha = 1f - (scrollY / (titleViewHeight * 0.75f));
 
                 if (alpha <= 1 && alpha >= 0) {
-                    binding.detailFabShare.setAlpha(alpha);
-                    if (binding.detailFabShare.getVisibility() != View.VISIBLE
+                    binding.detailFabFavourite.setAlpha(alpha);
+                    if (binding.detailFabFavourite.getVisibility() != View.VISIBLE
                             && scrollY <= (titleViewHeight * 0.75f)) {
-                        binding.detailFabShare.setVisibility(View.VISIBLE);
-                        binding.detailFabShare.setClickable(true);
-                        binding.detailFabShare.setFocusable(true);
+                        binding.detailFabFavourite.setVisibility(View.VISIBLE);
+                        binding.detailFabFavourite.setClickable(true);
+                        binding.detailFabFavourite.setFocusable(true);
                     }
                 } else if (alpha < 0) {
-                    binding.detailFabShare.setAlpha(-1);
-                    if (binding.detailFabShare.getVisibility() != View.GONE
+                    binding.detailFabFavourite.setAlpha(-1);
+                    if (binding.detailFabFavourite.getVisibility() != View.GONE
                             && scrollY >= (titleViewHeight * 0.75f)) {
-                        binding.detailFabShare.setVisibility(View.GONE);
-                        binding.detailFabShare.setClickable(false);
-                        binding.detailFabShare.setFocusable(false);
+                        binding.detailFabFavourite.setVisibility(View.GONE);
+                        binding.detailFabFavourite.setClickable(false);
+                        binding.detailFabFavourite.setFocusable(false);
                     }
                 }
             }
@@ -283,10 +277,6 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.detail_menu, menu);
-        this.menu = menu;
-        if (drawableId != -1) {
-            updateFavouriteIcon(drawableId);
-        }
         return true;
     }
 
@@ -297,10 +287,14 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
             case android.R.id.home:
                 onBackPressed();
                 return true;
-            case R.id.action_favourite:
-                if (joke != null) {
-                    presenter.updateFavourite(joke);
-                }
+            case R.id.action_share:
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                String text = joke.getTitle()
+                        + "\n\n" + joke.getBody()
+                        + getString(R.string.shared_via_jokesby);
+                sharingIntent.putExtra(Intent.EXTRA_TEXT, text);
+                startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_via)));
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -312,8 +306,8 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
             binding.detailScrollView.setVisibility(View.GONE);
         }
 
-        if (binding.detailFabShare.getVisibility() != View.GONE) {
-            binding.detailFabShare.setVisibility(View.GONE);
+        if (binding.detailFabFavourite.getVisibility() != View.GONE) {
+            binding.detailFabFavourite.setVisibility(View.GONE);
         }
 
         if (binding.detailProgressBar.getVisibility() != View.VISIBLE) {
@@ -327,8 +321,8 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
             binding.detailScrollView.setVisibility(View.VISIBLE);
         }
 
-        if (binding.detailFabShare.getVisibility() != View.VISIBLE) {
-            binding.detailFabShare.setVisibility(View.VISIBLE);
+        if (binding.detailFabFavourite.getVisibility() != View.VISIBLE) {
+            binding.detailFabFavourite.setVisibility(View.VISIBLE);
         }
 
         if (binding.detailProgressBar.getVisibility() != View.GONE) {
@@ -340,21 +334,9 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     public void onPostUpdateFavourite(boolean favourite) {
         result = Activity.RESULT_OK;
         if (favourite) {
-            updateFavouriteIcon(R.drawable.ic_favourite_black);
+            binding.detailFabFavourite.setImageResource(R.drawable.ic_favourite_black);
         } else {
-            updateFavouriteIcon(R.drawable.ic_favourite_border_black);
-        }
-    }
-
-    private void updateFavouriteIcon(int drawableId) {
-        // If user rotates device while database is being queried, menu could be null.
-        // If it is, invalidate the menu.
-        if (menu == null) {
-            this.drawableId = drawableId;
-            invalidateOptionsMenu();
-        } else {
-            MenuItem menuItem = menu.findItem(R.id.action_favourite);
-            menuItem.setIcon(ContextCompat.getDrawable(this, drawableId));
+            binding.detailFabFavourite.setImageResource(R.drawable.ic_favourite_border_black);
         }
     }
 

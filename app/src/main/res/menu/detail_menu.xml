@@ -5,10 +5,10 @@
     tools:context=".MainActivity">
 
     <item
-        android:id="@+id/action_favourite"
-        android:icon="@drawable/ic_favourite_border_black"
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_share_black"
         android:orderInCategory="300"
-        android:title="@string/favourite"
+        android:title="@string/share"
         app:iconTint="@color/white"
         app:showAsAction="ifRoom" />
 

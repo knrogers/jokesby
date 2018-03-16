@@ -69,15 +69,15 @@
         </android.support.v4.widget.NestedScrollView>
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/detail_fab_share"
+            android:id="@+id/detail_fab_favourite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/detail_fab_share_margin"
+            android:layout_margin="@dimen/detail_fab_favourite_margin"
             android:scaleType="center"
-            android:src="@drawable/ic_share_black"
+            android:src="@drawable/ic_favourite_border_black"
             android:tint="@color/white"
             app:backgroundTint="@color/primary"
-            app:elevation="@dimen/detail_fab_share_elevation"
+            app:elevation="@dimen/detail_fab_favourite_elevation"
             app:fabSize="normal"
             app:layout_anchor="@id/detail_text_view_title"
             app:layout_anchorGravity="end|bottom" />
