@@ -247,6 +247,7 @@ public class MainActivity extends AppCompatActivity implements
         if (selectedFragment.getScrollOffset() > 0) {
             selectedFragment.resetScrollPosition();
         } else {
+            presenter.setAfter(null);
             this.listFragmentTag = listFragmentTag;
             JokeFragment jokeFragment = (JokeFragment) fragmentManager
                     .findFragmentByTag(getString(jokeFragmentTagId));
