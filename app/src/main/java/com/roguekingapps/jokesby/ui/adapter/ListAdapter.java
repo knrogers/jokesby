@@ -2,6 +2,7 @@ package com.roguekingapps.jokesby.ui.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,7 +24,6 @@ import java.util.List;
 public class ListAdapter extends RecyclerView.Adapter {
 
     private final int VIEW_ITEM = 1;
-    private final int VIEW_LOADING = 0;
 
     private OnLoadMoreListener onLoadMoreListener;
     private boolean loading;
@@ -43,26 +43,26 @@ public class ListAdapter extends RecyclerView.Adapter {
         this.robotoMedium = robotoMedium;
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_ITEM) {
             LayoutListItemJokeBinding binding = LayoutListItemJokeBinding.inflate(
                     LayoutInflater.from(context),
                     parent,
                     false);
             return new JokeViewHolder(binding);
-        } else if (viewType == VIEW_LOADING) {
+        } else {
             LayoutListItemProgressBarBinding binding = LayoutListItemProgressBarBinding.inflate(
                     LayoutInflater.from(context),
                     parent,
                     false);
             return new LoadingViewHolder(binding);
         }
-        return null;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof JokeViewHolder) {
             Joke joke = jokes.get(position);
             JokeViewHolder jokeViewHolder = (JokeViewHolder) holder;
@@ -78,7 +78,7 @@ public class ListAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
-        return jokes.get(position) == null ? VIEW_LOADING : VIEW_ITEM;
+        return jokes.get(position) == null ? 0 : VIEW_ITEM;
     }
 
     @Override
