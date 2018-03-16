@@ -20,6 +20,8 @@
     <string name="laugh_emoticon" translatable="false">laugh emoticon</string>
     <string name="result_code" translatable="false">result code</string>
     <string name="initial_load" translatable="false">initialLoad</string>
+    <string name="shared_preferences" translatable="false">shared_preferences</string>
+    <string name="consent_given" translatable="false">consent_given</string>
     <string name="favourites">Favorites</string>
     <string name="hot">Hot</string>
     <string name="random">Random</string>
@@ -33,5 +35,10 @@
     <string name="rated">Rated</string>
     <string name="add_favourites">Add some favorites.</string>
     <string name="rate_jokes">Jokes you rate will be shown here.</string>
-    <string name="share">share</string>
+    <string name="share">Share</string>
+    <string name="content_disclaimer">Jokesby does not filter the content posted to Reddit. \n\nDue to the possibility of jokes of an adult nature being posted to Reddit, Jokesby is designed for adults only and may include material that some users may find offensive. \n\nIf you are under the age of 18 or if such material offends you please DO NOT use this app.</string>
+    <string name="reddit_registered_trademark">Reddit is a registered trademark owned by Reddit, Inc.</string>
+    <string name="continue_to_use">Continue</string>
+    <string name="content_disclaimer_title">Content Disclaimer</string>
+    <string name="exit">Exit</string>
 </resources>
