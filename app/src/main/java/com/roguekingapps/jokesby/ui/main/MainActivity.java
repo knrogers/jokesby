@@ -2,6 +2,7 @@ package com.roguekingapps.jokesby.ui.main;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -21,6 +22,8 @@ import com.roguekingapps.jokesby.ui.bottomnavigation.BottomNavigationItemReselec
 import com.roguekingapps.jokesby.ui.bottomnavigation.BottomNavigationItemSelectedListener;
 import com.roguekingapps.jokesby.ui.bottomnavigation.BottomNavigationItemSelectedListener.OnNavigationItemSelectedCallback;
 import com.roguekingapps.jokesby.ui.detail.DetailActivity;
+import com.roguekingapps.jokesby.ui.main.fragment.DisclaimerDialogFragment;
+import com.roguekingapps.jokesby.ui.main.fragment.DisclaimerDialogFragment.OnDisclaimerInteractionListener;
 import com.roguekingapps.jokesby.ui.main.fragment.JokeFragment;
 import com.roguekingapps.jokesby.ui.main.fragment.ListFragment;
 import com.roguekingapps.jokesby.ui.main.fragment.ListFragmentListener;
@@ -33,7 +36,8 @@ public class MainActivity extends AppCompatActivity implements
         MainView,
         ListFragmentListener,
         OnNavigationItemSelectedCallback,
-        OnNavigationItemReselectedCallback {
+        OnNavigationItemReselectedCallback,
+        OnDisclaimerInteractionListener {
 
     private MainActivityComponent activityComponent;
     private String listFragmentTag;
@@ -58,6 +62,31 @@ public class MainActivity extends AppCompatActivity implements
         binding.bottomNavigation
                 .setOnNavigationItemReselectedListener(bottomNavigationItemReselectedListener);
         listFragmentTag = getListFragmentTag(savedInstanceState);
+
+        if (getConsentGiven()) {
+            showListFragment();
+        } else {
+            showDisclaimerFragment();
+        }
+    }
+
+    private boolean getConsentGiven() {
+        SharedPreferences sharedPreferences =
+                getSharedPreferences(getString(R.string.shared_preferences), MODE_PRIVATE);
+        String consentGivenKey = getString(R.string.consent_given);
+        return sharedPreferences.contains(consentGivenKey)
+                && sharedPreferences.getBoolean(consentGivenKey, false);
+    }
+
+    private String getListFragmentTag(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            return savedInstanceState.getString
+                    (getString(R.string.list_fragment_tag), getString(R.string.hot));
+        }
+        return getString(R.string.hot);
+    }
+
+    private void showListFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         ListFragment selectedFragment =
                 (ListFragment) fragmentManager.findFragmentByTag(listFragmentTag);
@@ -69,12 +98,13 @@ public class MainActivity extends AppCompatActivity implements
                 .commit();
     }
 
-    private String getListFragmentTag(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            return savedInstanceState.getString
-                    (getString(R.string.list_fragment_tag), getString(R.string.hot));
-        }
-        return getString(R.string.hot);
+    private void showDisclaimerFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        DisclaimerDialogFragment disclaimerFragment = DisclaimerDialogFragment.newInstance();
+        disclaimerFragment.setCancelable(false);
+        fragmentManager.beginTransaction()
+                .add(disclaimerFragment, getString(R.string.content_disclaimer))
+                .commit();
     }
 
     @Override
@@ -235,5 +265,20 @@ public class MainActivity extends AppCompatActivity implements
                     .build();
         }
         return activityComponent;
+    }
+
+    @Override
+    public void onSelectContinue() {
+        SharedPreferences sharedPreferences =
+                getSharedPreferences(getString(R.string.shared_preferences), MODE_PRIVATE);
+        sharedPreferences.edit()
+                .putBoolean(getString(R.string.consent_given), true)
+                .apply();
+        showListFragment();
+    }
+
+    @Override
+    public void onSelectExit() {
+        finish();
     }
 }
