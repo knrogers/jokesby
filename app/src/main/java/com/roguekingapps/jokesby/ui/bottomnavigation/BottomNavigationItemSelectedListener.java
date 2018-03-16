@@ -1,13 +1,10 @@
 package com.roguekingapps.jokesby.ui.bottomnavigation;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.view.MenuItem;
 
 import com.roguekingapps.jokesby.R;
-import com.roguekingapps.jokesby.di.ActivityContext;
-import com.roguekingapps.jokesby.ui.main.fragment.ListFragment;
 
 import javax.inject.Inject;
 
@@ -16,42 +13,33 @@ import javax.inject.Inject;
  */
 public class BottomNavigationItemSelectedListener implements BottomNavigationView.OnNavigationItemSelectedListener {
 
-    private Context context;
     private OnNavigationItemSelectedCallback callback;
 
     @Inject
-    BottomNavigationItemSelectedListener(
-            @ActivityContext Context context,
-            OnNavigationItemSelectedCallback callback) {
-        this.context = context;
+    BottomNavigationItemSelectedListener(OnNavigationItemSelectedCallback callback) {
         this.callback = callback;
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        ListFragment listFragment;
         switch (item.getItemId()) {
             case R.id.action_hot:
-                listFragment = ListFragment.newInstance(R.string.hot_joke_fragment_tag);
-                callback.updateListFragment(listFragment, context.getString(R.string.hot));
+                callback.updateListFragment(R.string.hot, R.string.hot_joke_fragment_tag);
                 break;
             case R.id.action_random:
-                listFragment = ListFragment.newInstance(R.string.random_joke_fragment_tag);
-                callback.updateListFragment(listFragment, context.getString(R.string.random));
+                callback.updateListFragment(R.string.random, R.string.random_joke_fragment_tag);
                 break;
             case R.id.action_favourites:
-                listFragment = ListFragment.newInstance(R.string.favourite_joke_fragment_tag);
-                callback.updateListFragment(listFragment, context.getString(R.string.favourites));
+                callback.updateListFragment(R.string.favourites, R.string.favourite_joke_fragment_tag);
                 break;
             case R.id.action_rated:
-                listFragment = ListFragment.newInstance(R.string.rated_joke_fragment_tag);
-                callback.updateListFragment(listFragment, context.getString(R.string.rated));
+                callback.updateListFragment(R.string.rated, R.string.rated_joke_fragment_tag);
                 break;
         }
         return true;
     }
 
     public interface OnNavigationItemSelectedCallback {
-        void updateListFragment(ListFragment listFragment, String listFragmentTag);
+        void updateListFragment(int listFragmentTagId, int jokeFragmentTagId);
     }
 }

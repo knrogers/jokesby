@@ -229,8 +229,9 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void updateListFragment(ListFragment listFragment, String listFragmentTag) {
-        this.listFragmentTag = listFragmentTag;
+    public void updateListFragment(int listFragmentTagId, int jokeFragmentTagId) {
+        listFragmentTag = getString(listFragmentTagId);
+        ListFragment listFragment = ListFragment.newInstance(jokeFragmentTagId);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.list_container, listFragment, listFragmentTag)
@@ -238,7 +239,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void updateCurrentFragment(ListFragment listFragment, String listFragmentTag, int jokeFragmentTagId) {
+    public void updateCurrentFragment(int listFragmentTagId, int jokeFragmentTagId) {
+        String listFragmentTag = getString(listFragmentTagId);
         FragmentManager fragmentManager = getSupportFragmentManager();
         ListFragment selectedFragment =
                 (ListFragment) fragmentManager.findFragmentByTag(listFragmentTag);
@@ -251,6 +253,7 @@ public class MainActivity extends AppCompatActivity implements
             if (jokeFragment != null) {
                 jokeFragment.setJokes(null);
             }
+            ListFragment listFragment = ListFragment.newInstance(jokeFragmentTagId);
             fragmentManager.beginTransaction()
                     .replace(R.id.list_container, listFragment, listFragmentTag)
                     .commit();

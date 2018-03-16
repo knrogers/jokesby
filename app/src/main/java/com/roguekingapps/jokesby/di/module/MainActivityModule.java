@@ -1,8 +1,5 @@
 package com.roguekingapps.jokesby.di.module;
 
-import android.content.Context;
-
-import com.roguekingapps.jokesby.di.ActivityContext;
 import com.roguekingapps.jokesby.di.PerActivity;
 import com.roguekingapps.jokesby.ui.bottomnavigation.BottomNavigationItemReselectedListener.OnNavigationItemReselectedCallback;
 import com.roguekingapps.jokesby.ui.bottomnavigation.BottomNavigationItemSelectedListener.OnNavigationItemSelectedCallback;
@@ -22,12 +19,6 @@ public class MainActivityModule {
 
     public MainActivityModule(MainActivity activity) {
         this.activity = activity;
-    }
-
-    @Provides
-    @ActivityContext
-    Context provideActivityContext() {
-        return activity;
     }
 
     @Provides
