@@ -8,65 +8,86 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/detail_app_bar"
-            layout="@layout/layout_app_bar" />
-
-        <android.support.v4.widget.NestedScrollView
-            android:id="@+id/detail_scroll_view"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:layout_height="match_parent">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <include
+                android:id="@+id/detail_app_bar"
+                layout="@layout/layout_app_bar" />
+
+            <android.support.v4.widget.NestedScrollView
+                android:id="@+id/detail_scroll_view"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:clipToPadding="false"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                app:layout_constraintTop_toBottomOf="@id/detail_app_bar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/ad_view">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/detail_padding_bottom">
+
+                    <TextView
+                        android:id="@+id/detail_text_view_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/accent"
+                        android:paddingBottom="@dimen/detail_text_view_title_padding_bottom"
+                        android:paddingEnd="@dimen/detail_text_view_title_padding"
+                        android:paddingStart="@dimen/detail_text_view_title_padding"
+                        android:paddingTop="@dimen/detail_text_view_title_padding"
+                        android:textAlignment="center"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/detail_text_view_title_text_size"
+                        tools:text="joke title" />
+
+                    <TextView
+                        android:id="@+id/detail_text_view_body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/detail_text_view_body_padding_bottom"
+                        android:paddingEnd="@dimen/detail_text_view_body_padding_horizontal"
+                        android:paddingStart="@dimen/detail_text_view_body_padding_horizontal"
+                        android:paddingTop="@dimen/detail_text_view_body_padding_top"
+                        android:textSize="@dimen/detail_text_view_body_text_size"
+                        tools:text="joke body" />
+
+                    <TextView
+                        android:id="@+id/detail_text_view_submitted_by"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingEnd="@dimen/detail_text_view_submitted_by_padding_horizontal"
+                        android:paddingStart="@dimen/detail_text_view_submitted_by_padding_horizontal"
+                        android:paddingTop="@dimen/detail_text_view_submitted_by_padding_top"
+                        android:textSize="@dimen/detail_text_view_submitted_by_text_size"
+                        tools:text="Submitted by /u/username" />
+
+                    <include
+                        android:id="@+id/detail_rating_bar"
+                        layout="@layout/layout_rating_bar" />
+
+                </LinearLayout>
+            </android.support.v4.widget.NestedScrollView>
+
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/ad_view"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="@dimen/detail_padding_bottom">
+                app:adSize="SMART_BANNER"
+                app:adUnitId="ca-app-pub-5067360240308225/2670967743"
+                app:layout_constraintTop_toBottomOf="@id/detail_scroll_view"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-                <TextView
-                    android:id="@+id/detail_text_view_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/accent"
-                    android:paddingBottom="@dimen/detail_text_view_title_padding_bottom"
-                    android:paddingEnd="@dimen/detail_text_view_title_padding"
-                    android:paddingStart="@dimen/detail_text_view_title_padding"
-                    android:paddingTop="@dimen/detail_text_view_title_padding"
-                    android:textAlignment="center"
-                    android:textAllCaps="true"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/detail_text_view_title_text_size"
-                    tools:text="joke title" />
-
-                <TextView
-                    android:id="@+id/detail_text_view_body"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/detail_text_view_body_padding_bottom"
-                    android:paddingEnd="@dimen/detail_text_view_body_padding_horizontal"
-                    android:paddingStart="@dimen/detail_text_view_body_padding_horizontal"
-                    android:paddingTop="@dimen/detail_text_view_body_padding_top"
-                    android:textSize="@dimen/detail_text_view_body_text_size"
-                    tools:text="joke body" />
-
-                <TextView
-                    android:id="@+id/detail_text_view_submitted_by"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingEnd="@dimen/detail_text_view_submitted_by_padding_horizontal"
-                    android:paddingStart="@dimen/detail_text_view_submitted_by_padding_horizontal"
-                    android:paddingTop="@dimen/detail_text_view_submitted_by_padding_top"
-                    android:textSize="@dimen/detail_text_view_submitted_by_text_size"
-                    tools:text="Submitted by /u/username" />
-
-                <include
-                    android:id="@+id/detail_rating_bar"
-                    layout="@layout/layout_rating_bar" />
-
-            </LinearLayout>
-        </android.support.v4.widget.NestedScrollView>
+        </android.support.constraint.ConstraintLayout>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/detail_fab_favourite"

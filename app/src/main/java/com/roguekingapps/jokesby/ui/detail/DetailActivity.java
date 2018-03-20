@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.Space;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
 import com.roguekingapps.jokesby.JokesbyApplication;
 import com.roguekingapps.jokesby.R;
 import com.roguekingapps.jokesby.data.model.Joke;
@@ -61,6 +62,9 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
         getActivityComponent().inject(this);
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+        binding.adView.loadAd(adRequest);
 
         setSupportActionBar(binding.detailAppBar.toolbar);
         ActionBar actionBar = getSupportActionBar();
