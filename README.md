@@ -4,6 +4,8 @@ Jokesby is an Android app that allows users to view the hottest jokes on Reddit 
 
 Jokes can be saved and rated you love so they can be easily viewed later.
 
+Jokesby is available on the [Google Play store](https://play.google.com/store/apps/details?id=com.roguekingapps.jokesby).
+
 ## Project Details
 
 - Created project with MVP architectural structure.
